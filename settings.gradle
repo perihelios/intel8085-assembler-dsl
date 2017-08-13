@@ -1,0 +1,4 @@
+rootProject.name = 'intel8085-assembler-dsl'
+
+include 'assembler'
+include 'example-usage'

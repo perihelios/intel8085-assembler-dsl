@@ -1,0 +1,18 @@
+subprojects {
+	group 'com.perihelios.experimental'
+	version '0.0.1'
+
+	apply plugin: 'java'
+	apply plugin: 'groovy'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compile "org.codehaus.groovy:groovy-all:2.4.7"
+
+		testCompile "junit:junit:4.12"
+		testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"
+	}
+}
