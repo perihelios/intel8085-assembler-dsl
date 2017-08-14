@@ -15,6 +15,10 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionForTargetException
+import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
+import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
+
 import static Intel8085AssemblerDsl.ProcessorTarget.*
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
 

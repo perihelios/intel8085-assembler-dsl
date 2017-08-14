@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-package com.perihelios.experimental.intel8085dsl
+package com.perihelios.experimental.intel8085dsl.exceptions
 
 class InvalidAddressException extends RuntimeException {
 	InvalidAddressException(String message) {

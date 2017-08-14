@@ -13,10 +13,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-package com.perihelios.experimental.intel8085dsl
+package com.perihelios.experimental.intel8085dsl.exceptions
 
-class InvalidInstructionForTargetException extends RuntimeException {
-	InvalidInstructionForTargetException(String message) {
+class OverflowException extends RuntimeException {
+	OverflowException(String message) {
 		super(message)
 	}
 }

@@ -15,6 +15,7 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
