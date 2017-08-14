@@ -20,6 +20,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static Intel8085AssemblerDsl.asm
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.B
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.C
@@ -30,11 +31,12 @@ import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Reg
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.PSW
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.SP
-import static Intel8085AssemblerDsl.asm
+import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
+import static com.perihelios.experimental.intel8085dsl.TestUtil.combine
 
 class InvalidRegisterTest extends Specification{
 	@Shared
-	private List<List> invalidSingleRegisterInstructionCombos = combine(
+	private List<Tuple2<String, Register>> invalidSingleRegisterInstructionCombos = combine(
 		[
 			"ADC",
 			"ADD",
@@ -53,12 +55,12 @@ class InvalidRegisterTest extends Specification{
 		combine(["LDAX", "STAX"], EnumSet.complementOf(EnumSet.of(B, D)))
 
 	@Shared
-	private List<List> invalidRegisterImmediateInstructionCombos =
+	private List<Tuple2<String, Register>> invalidRegisterImmediateInstructionCombos =
 		combine(["LXI"], EnumSet.complementOf(EnumSet.of(B, D, H, SP))) +
 			combine(["MVI"], EnumSet.complementOf(EnumSet.of(A, B, C, D, E, H, L, M)))
 
 	@Shared
-	private List<List> invalidTwoRegisterInstructionCombos =
+	private List<Tuple2<String, Register>> invalidTwoRegisterInstructionCombos =
 		combine(["MOV"], EnumSet.complementOf(EnumSet.of(A, B, C, D, E, H, L, M)))
 
 	@Unroll
@@ -135,17 +137,5 @@ class InvalidRegisterTest extends Specification{
 		then:
 			InvalidRegisterException expected = thrown()
 			expected.message == "Source and destination cannot both be M"
-	}
-
-	private static List<List> combine(Collection<?> left, Collection<?> right) {
-		List result = []
-
-		left.each { leftItem ->
-			right.each { rightItem ->
-				result << [leftItem, rightItem]
-			}
-		}
-
-		return result
 	}
 }
