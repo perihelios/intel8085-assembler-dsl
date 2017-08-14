@@ -34,10 +34,6 @@ class ClosureDelegate {
 		this.machineCode = machineCode
 	}
 
-	int getIndex() {
-		return index
-	}
-
 	void ACI(long value) {
 		validate8BitValue(value)
 
@@ -493,6 +489,10 @@ class ClosureDelegate {
 
 	void XTHL() {
 		machineCode[index++] = 0b11100011
+	}
+
+	int get$i() {
+		return index
 	}
 
 	private static void validate8BitValue(long value) {

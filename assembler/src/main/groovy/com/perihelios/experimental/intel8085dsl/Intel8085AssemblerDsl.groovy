@@ -99,7 +99,7 @@ class Intel8085AssemblerDsl {
 		}
 
 		if (bytes == AUTO_SIZE) {
-			return Arrays.copyOf(machineCode, delegate.index)
+			return Arrays.copyOf(machineCode, delegate.$i)
 		} else {
 			return machineCode
 		}
