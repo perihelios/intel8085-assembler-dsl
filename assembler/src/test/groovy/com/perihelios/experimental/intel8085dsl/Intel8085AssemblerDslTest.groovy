@@ -16,16 +16,15 @@
 package com.perihelios.experimental.intel8085dsl
 
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionForTargetException
-import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static Intel8085AssemblerDsl.AUTO_SIZE
+import static Intel8085AssemblerDsl.asm
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.B
-import static Intel8085AssemblerDsl.asm
 
 class Intel8085AssemblerDslTest extends Specification {
 	def "target validated"() {
@@ -107,23 +106,5 @@ class Intel8085AssemblerDslTest extends Specification {
 
 		where:
 			inst << ["RIM", "SIM"]
-	}
-
-	@Unroll
-	"argument overflow: #inst #value"() {
-		when:
-			asm {
-				"$inst"(value)
-			}
-
-		then:
-			OverflowException expected = thrown()
-			expected.message == message
-
-		where:
-			inst  | value || message
-			"ACI" | 256   || "Value 256 (0x100, 0400, 0b100000000) is larger than 8 bits"
-			"ACI" | -129  || "Value -129 (0x17f, 0577, 0b101111111) is larger than 8 bits"
-			"ACI" | -1000 || "Value -1000 (0xfc18, 076030, 0b10000011000) is larger than 8 bits"
 	}
 }

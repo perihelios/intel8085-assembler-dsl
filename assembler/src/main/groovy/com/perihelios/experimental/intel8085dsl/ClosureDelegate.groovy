@@ -15,15 +15,17 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget
+import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionForTargetException
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
 import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
+import groovy.transform.PackageScope
 
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
 
+@PackageScope
 class ClosureDelegate {
 	private final ProcessorTarget target
 	private final byte[] machineCode
@@ -35,7 +37,7 @@ class ClosureDelegate {
 	}
 
 	void ACI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11001110
 		machineCode[index++] = value
@@ -50,7 +52,7 @@ class ClosureDelegate {
 	}
 
 	void ADI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11000110
 		machineCode[index++] = value
@@ -61,14 +63,14 @@ class ClosureDelegate {
 	}
 
 	void ANI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11100110
 		machineCode[index++] = value
 	}
 
 	void CALL(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11001101
 		machineCode[index++] = address & 0xff
@@ -76,7 +78,7 @@ class ClosureDelegate {
 	}
 
 	void CC(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11011100
 		machineCode[index++] = address & 0xff
@@ -84,7 +86,7 @@ class ClosureDelegate {
 	}
 
 	void CM(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11111100
 		machineCode[index++] = address & 0xff
@@ -104,7 +106,7 @@ class ClosureDelegate {
 	}
 
 	void CNC(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11010100
 		machineCode[index++] = address & 0xff
@@ -112,7 +114,7 @@ class ClosureDelegate {
 	}
 
 	void CNZ(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11000100
 		machineCode[index++] = address & 0xff
@@ -120,7 +122,7 @@ class ClosureDelegate {
 	}
 
 	void CP(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11110100
 		machineCode[index++] = address & 0xff
@@ -128,7 +130,7 @@ class ClosureDelegate {
 	}
 
 	void CPE(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11101100
 		machineCode[index++] = address & 0xff
@@ -136,14 +138,14 @@ class ClosureDelegate {
 	}
 
 	void CPI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11111110
 		machineCode[index++] = value
 	}
 
 	void CPO(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11100100
 		machineCode[index++] = address & 0xff
@@ -151,7 +153,7 @@ class ClosureDelegate {
 	}
 
 	void CZ(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11001100
 		machineCode[index++] = address & 0xff
@@ -187,7 +189,7 @@ class ClosureDelegate {
 	}
 
 	void IN(long port) {
-		validate8BitValue(port)
+		validateP8(port)
 
 		machineCode[index++] = 0b11011011
 		machineCode[index++] = port
@@ -202,7 +204,7 @@ class ClosureDelegate {
 	}
 
 	void JC(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11011010
 		machineCode[index++] = address & 0xff
@@ -210,7 +212,7 @@ class ClosureDelegate {
 	}
 
 	void JM(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11111010
 		machineCode[index++] = address & 0xff
@@ -218,7 +220,7 @@ class ClosureDelegate {
 	}
 
 	void JMP(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11000011
 		machineCode[index++] = address & 0xff
@@ -226,7 +228,7 @@ class ClosureDelegate {
 	}
 
 	void JNC(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11010010
 		machineCode[index++] = address & 0xff
@@ -234,7 +236,7 @@ class ClosureDelegate {
 	}
 
 	void JNZ(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11000010
 		machineCode[index++] = address & 0xff
@@ -242,7 +244,7 @@ class ClosureDelegate {
 	}
 
 	void JP(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11110010
 		machineCode[index++] = address & 0xff
@@ -250,7 +252,7 @@ class ClosureDelegate {
 	}
 
 	void JPE(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11101010
 		machineCode[index++] = address & 0xff
@@ -258,7 +260,7 @@ class ClosureDelegate {
 	}
 
 	void JPO(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11100010
 		machineCode[index++] = address & 0xff
@@ -266,7 +268,7 @@ class ClosureDelegate {
 	}
 
 	void JZ(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b11001010
 		machineCode[index++] = address & 0xff
@@ -274,7 +276,7 @@ class ClosureDelegate {
 	}
 
 	void LDA(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b00111010
 		machineCode[index++] = address & 0xff
@@ -286,7 +288,7 @@ class ClosureDelegate {
 	}
 
 	void LHLD(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b00101010
 		machineCode[index++] = address & 0xff
@@ -294,7 +296,7 @@ class ClosureDelegate {
 	}
 
 	void LXI(Register reg, long value) {
-		validate16BitValue(value)
+		validateD16(value)
 
 		machineCode[index++] = 0b00000001 | (reg.reg16 << 4)
 		machineCode[index++] = value & 0xff
@@ -308,7 +310,7 @@ class ClosureDelegate {
 	}
 
 	void MVI(Register reg, long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b00000110 | (reg.reg8 << 3)
 		machineCode[index++] = value & 0xff
@@ -323,14 +325,14 @@ class ClosureDelegate {
 	}
 
 	void ORI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11110110
 		machineCode[index++] = value
 	}
 
 	void OUT(long port) {
-		validate8BitValue(port)
+		validateP8(port)
 
 		machineCode[index++] = 0b11010011
 		machineCode[index++] = port
@@ -405,7 +407,7 @@ class ClosureDelegate {
 	}
 
 	void RST(long addressCode) {
-		validateRstAddressCode(addressCode)
+		validateD3(addressCode)
 
 		machineCode[index++] = 0b11000111 | (addressCode << 3)
 	}
@@ -419,14 +421,14 @@ class ClosureDelegate {
 	}
 
 	void SBI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11011110
 		machineCode[index++] = value
 	}
 
 	void SHLD(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b00100010
 		machineCode[index++] = address & 0xff
@@ -446,7 +448,7 @@ class ClosureDelegate {
 	}
 
 	void STA(long address) {
-		validateAddress(address)
+		validateA16(address)
 
 		machineCode[index++] = 0b00110010
 		machineCode[index++] = address & 0xff
@@ -466,7 +468,7 @@ class ClosureDelegate {
 	}
 
 	void SUI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11010110
 		machineCode[index++] = value
@@ -481,7 +483,7 @@ class ClosureDelegate {
 	}
 
 	void XRI(long value) {
-		validate8BitValue(value)
+		validateD8(value)
 
 		machineCode[index++] = 0b11101110
 		machineCode[index++] = value
@@ -495,46 +497,109 @@ class ClosureDelegate {
 		return index
 	}
 
-	private static void validate8BitValue(long value) {
-		String hex = null
-		String octal = null
-		String binary = null
+	private static void validateD3(long value) {
+		if (value < 0 || value > 7) {
+			String hex = toCompressedHex(value, 0xf)
+			String octal = toCompressedOctal(value, 077)
+			String binary = toCompressedBinary(value, 0b1111)
 
-		if (value > 0xff) {
-			hex = Long.toString(value, 16)
-			octal = Long.toString(value, 8)
-			binary = Long.toString(value, 2)
+			throw new OverflowException(
+				"Operand value must be from 0 to 7; got $value ($hex, $octal, $binary)"
+			)
 		}
+	}
 
+	private static void validateD8(long value) {
+		if (value < -128 || value > 255) {
+			String hex = toCompressedHex(value, 0xfff)
+			String octal = toCompressedOctal(value, 0777)
+			String binary = toCompressedBinary(value, 0b111111111)
+
+			throw new OverflowException(
+				"Operand value must be from -128 to 255; got $value ($hex, $octal, $binary)"
+			)
+		}
+	}
+
+	private static void validateP8(long value) {
+		if (value < 0 || value > 255) {
+			String hex = toCompressedHex(value, 0xfff)
+			String octal = toCompressedOctal(value, 0777)
+			String binary = toCompressedBinary(value, 0b111111111)
+
+			throw new OverflowException(
+				"Operand value must be from 0 to 255; got $value ($hex, $octal, $binary)"
+			)
+		}
+	}
+
+	private static void validateA16(long value) {
+		if (value < 0 || value > 65535) {
+			String hex = toCompressedHex(value, 0xfffff)
+			String octal = toCompressedOctal(value, 0777777)
+			String binary = toCompressedBinary(value, 0b11111111111111111)
+
+			throw new OverflowException(
+				"Operand value must be from 0 to 65535; got $value ($hex, $octal, $binary)"
+			)
+		}
+	}
+
+	private static void validateD16(long value) {
+		if (value < -32768 || value > 65535) {
+			String hex = toCompressedHex(value, 0xfffff)
+			String octal = toCompressedOctal(value, 0777777)
+			String binary = toCompressedBinary(value, 0b11111111111111111)
+
+			throw new OverflowException(
+				"Operand value must be from -32768 to 65535; got $value ($hex, $octal, $binary)"
+			)
+		}
+	}
+
+	private static String toCompressedHex(long value, long minBitWidthMask) {
 		if (value < 0) {
-			if((value >>> 8) != 0xffffffffffffffL) {
-				hex = Long.toUnsignedString(value, 16).replaceFirst(/^f+/, "f")
-				octal = Long.toUnsignedString(value, 8).replaceFirst(/^17+/, "7")
-				binary = Long.toUnsignedString(value, 2).replaceFirst(/^1+/, "1")
-			} else if((value & 0x80) == 0) {
-				hex = "1" + Long.toString(value & 0xff, 16).padLeft(2, '0')
-				octal =
-					Long.toString(((value & 0700) >>> 6) | 04, 8) +
-						Long.toString((value & 070) >>> 3, 8) +
-						Long.toString(value & 07, 8)
-				binary = "1" + Long.toString(value & 0xff, 2).padLeft(8, '0')
+			long fMask = 0xf000000000000000L
+			long negativeMask = 0x800000000000000L
+			while ((fMask < 0 || fMask > minBitWidthMask) && (value & fMask) == fMask && (negativeMask & value) != 0) {
+				value &= ~fMask
+				fMask >>>= 4
+				negativeMask >>>= 4
 			}
 		}
 
-		if (hex) {
-			throw new OverflowException("Value $value (0x$hex, 0$octal, 0b$binary) is larger than 8 bits")
+		return "0x" + Long.toUnsignedString(value, 16)
+	}
+
+	private static String toCompressedOctal(long value, long minBitWidthMask) {
+		long negativeMask = 0400000000000000000000L
+
+		if (value < 0 && (value & negativeMask) != 0) {
+			value &= Long.MAX_VALUE
+			negativeMask >>>= 3
+
+			long fMask = 0700000000000000000000L
+			while (fMask > minBitWidthMask && (value & fMask) == fMask && (negativeMask & value) != 0) {
+				value &= ~fMask
+				fMask >>>= 3
+				negativeMask >>>= 3
+			}
 		}
+
+		return "0" + Long.toUnsignedString(value, 8)
 	}
 
-	private static void validate16BitValue(long value) {
-	}
+	private static String toCompressedBinary(long value, long minBitWidthMask) {
+		if (value < 0) {
+			long fMask = 0b1000000000000000000000000000000000000000000000000000000000000000L
+			long negativeMask = 0b100000000000000000000000000000000000000000000000000000000000000L
+			while ((fMask < 0 || fMask > minBitWidthMask) && (value & fMask) == fMask && (negativeMask & value) != 0) {
+				value &= ~fMask
+				fMask >>>= 1
+				negativeMask >>>= 1
+			}
+		}
 
-	private static void validateAddress(long address) {
-//			if (address > 0xffff) {
-//				throw new InvalidAddressException("Address $address ")
-//			}
-	}
-
-	private static void validateRstAddressCode(long addressCode) {
+		return "0b" + Long.toUnsignedString(value, 2)
 	}
 }

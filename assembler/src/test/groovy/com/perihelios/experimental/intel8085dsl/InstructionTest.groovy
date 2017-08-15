@@ -459,7 +459,7 @@ class InstructionTest extends Specification {
 			machineCode[1] == port as byte
 
 		where:
-			port << [0, 1, 0xff, -1, -128]
+			port << [0, 1, 0xfe, 0xff]
 	}
 
 	@Unroll
@@ -706,6 +706,7 @@ class InstructionTest extends Specification {
 			machineCode[1] == (value & 0xff) as byte
 			machineCode[2] == ((value >>> 8) & 0xff) as byte
 
+		// TODO: Add negative values
 		where:
 			reg | value  | opcode
 			B   | 0      | 0x01
@@ -932,7 +933,7 @@ class InstructionTest extends Specification {
 			machineCode[1] == port as byte
 
 		where:
-			port << [0, 1, 0xff, -1, -128]
+			port << [0, 1, 0xfe, 0xff]
 	}
 
 	@Unroll
