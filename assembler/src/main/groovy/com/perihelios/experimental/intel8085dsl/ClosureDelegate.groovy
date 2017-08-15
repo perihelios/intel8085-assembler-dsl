@@ -23,7 +23,6 @@ import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
 import groovy.transform.PackageScope
 
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
 
 @PackageScope
 class ClosureDelegate {
@@ -35,6 +34,17 @@ class ClosureDelegate {
 		this.target = target
 		this.machineCode = machineCode
 	}
+
+	final Register A = Register.A
+	final Register B = Register.B
+	final Register C = Register.C
+	final Register D = Register.D
+	final Register E = Register.E
+	final Register H = Register.H
+	final Register L = Register.L
+	final Register M = Register.M
+	final Register SP = Register.SP
+	final Register PSW = Register.PSW
 
 	void ACI(long value) {
 		validateD8(value)

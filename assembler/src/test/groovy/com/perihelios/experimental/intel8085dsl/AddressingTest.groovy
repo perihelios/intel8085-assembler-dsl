@@ -17,7 +17,6 @@ package com.perihelios.experimental.intel8085dsl
 
 import spock.lang.Specification
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.*
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.asm
 
 class AddressingTest extends Specification {

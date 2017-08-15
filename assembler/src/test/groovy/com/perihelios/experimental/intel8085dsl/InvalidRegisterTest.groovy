@@ -15,6 +15,7 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
 import spock.lang.Shared
 import spock.lang.Specification
@@ -31,7 +32,6 @@ import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Reg
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.PSW
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.SP
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import static com.perihelios.experimental.intel8085dsl.TestUtil.combine
 
 class InvalidRegisterTest extends Specification{

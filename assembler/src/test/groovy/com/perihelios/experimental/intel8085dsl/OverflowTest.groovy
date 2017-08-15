@@ -20,8 +20,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.H
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.asm
 import static com.perihelios.experimental.intel8085dsl.TestUtil.combine
 

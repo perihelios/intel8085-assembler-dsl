@@ -23,8 +23,6 @@ import static Intel8085AssemblerDsl.AUTO_SIZE
 import static Intel8085AssemblerDsl.asm
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.B
 
 class Intel8085AssemblerDslTest extends Specification {
 	def "target validated"() {

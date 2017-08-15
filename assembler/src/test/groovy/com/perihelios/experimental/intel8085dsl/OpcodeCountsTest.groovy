@@ -18,19 +18,9 @@ package com.perihelios.experimental.intel8085dsl
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.B
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.C
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.D
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.E
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.H
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.L
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.PSW
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.SP
 import static Intel8085AssemblerDsl.asm
 import static Intel8085AssemblerDsl.getAUTO_SIZE
+import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 
 class OpcodeCountsTest extends Specification {
 	@Unroll
