@@ -26,6 +26,7 @@ import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Pro
 
 @PackageScope
 class ClosureDelegate {
+	private final LabelManager labelManager
 	private final ProcessorTarget target
 	private final byte[] machineCode
 	private int index
@@ -33,6 +34,7 @@ class ClosureDelegate {
 	ClosureDelegate(ProcessorTarget target, byte[] machineCode) {
 		this.target = target
 		this.machineCode = machineCode
+		this.labelManager = new LabelManager()
 	}
 
 	final Register A = Register.A
@@ -46,465 +48,595 @@ class ClosureDelegate {
 	final Register SP = Register.SP
 	final Register PSW = Register.PSW
 
-	void ACI(long value) {
+	AssemblerMethodReturn ACI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11001110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void ADC(Register reg) {
+	AssemblerMethodReturn ADC(Register reg) {
 		machineCode[index++] = 0b10001000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void ADD(Register reg) {
+	AssemblerMethodReturn ADD(Register reg) {
 		machineCode[index++] = 0b10000000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void ADI(long value) {
+	AssemblerMethodReturn ADI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11000110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void ANA(Register reg) {
+	AssemblerMethodReturn ANA(Register reg) {
 		machineCode[index++] = 0b10100000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void ANI(long value) {
+	AssemblerMethodReturn ANI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11100110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void CALL(long address) {
+	AssemblerMethodReturn CALL(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11001101
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CC(long address) {
+	AssemblerMethodReturn CC(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11011100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CM(long address) {
+	AssemblerMethodReturn CM(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11111100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CMA() {
+	AssemblerMethodReturn CMA() {
 		machineCode[index++] = 0b00101111
+		new AssemblerMethodReturn(1)
 	}
 
-	void CMC() {
+	AssemblerMethodReturn CMC() {
 		machineCode[index++] = 0b00111111
+		new AssemblerMethodReturn(1)
 	}
 
-	void CMP(Register reg) {
+	AssemblerMethodReturn CMP(Register reg) {
 		machineCode[index++] = 0b10111000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void CNC(long address) {
+	AssemblerMethodReturn CNC(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11010100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CNZ(long address) {
+	AssemblerMethodReturn CNZ(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11000100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CP(long address) {
+	AssemblerMethodReturn CP(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11110100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CPE(long address) {
+	AssemblerMethodReturn CPE(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11101100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CPI(long value) {
+	AssemblerMethodReturn CPI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11111110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void CPO(long address) {
+	AssemblerMethodReturn CPO(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11100100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void CZ(long address) {
+	AssemblerMethodReturn CZ(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11001100
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void DAA() {
+	AssemblerMethodReturn DAA() {
 		machineCode[index++] = 0b00100111
+		new AssemblerMethodReturn(1)
 	}
 
-	void DAD(Register reg) {
+	AssemblerMethodReturn DAD(Register reg) {
 		machineCode[index++] = 0b00001001 | (reg.reg16 << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void DCR(Register reg) {
+	AssemblerMethodReturn DCR(Register reg) {
 		machineCode[index++] = 0b00000101 | (reg.reg8 << 3)
+		new AssemblerMethodReturn(1)
 	}
 
-	void DCX(Register reg) {
+	AssemblerMethodReturn DCX(Register reg) {
 		machineCode[index++] = 0b00001011 | (reg.reg16 << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void DI() {
+	AssemblerMethodReturn DI() {
 		machineCode[index++] = 0b11110011
+		new AssemblerMethodReturn(1)
 	}
 
-	void EI() {
+	AssemblerMethodReturn EI() {
 		machineCode[index++] = 0b11111011
+		new AssemblerMethodReturn(1)
 	}
 
-	void HLT() {
+	AssemblerMethodReturn HLT() {
 		machineCode[index++] = 0b01110110
+		new AssemblerMethodReturn(1)
 	}
 
-	void IN(long port) {
+	AssemblerMethodReturn IN(long port) {
 		validateP8(port)
 
 		machineCode[index++] = 0b11011011
 		machineCode[index++] = port
+		new AssemblerMethodReturn(2)
 	}
 
-	void INR(Register reg) {
+	AssemblerMethodReturn INR(Register reg) {
 		machineCode[index++] = 0b00000100 | (reg.reg8 << 3)
+		new AssemblerMethodReturn(1)
 	}
 
-	void INX(Register reg) {
+	AssemblerMethodReturn INX(Register reg) {
 		machineCode[index++] = 0b00000011 | (reg.reg16 << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void JC(long address) {
+	AssemblerMethodReturn JC(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11011010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JM(long address) {
+	AssemblerMethodReturn JM(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11111010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JMP(long address) {
+	AssemblerMethodReturn JMP(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11000011
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JNC(long address) {
+	AssemblerMethodReturn JNC(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11010010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JNZ(long address) {
+	AssemblerMethodReturn JNZ(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11000010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JP(long address) {
+	AssemblerMethodReturn JP(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11110010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JPE(long address) {
+	AssemblerMethodReturn JPE(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11101010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JPO(long address) {
+	AssemblerMethodReturn JPO(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11100010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void JZ(long address) {
+	AssemblerMethodReturn JZ(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b11001010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void LDA(long address) {
+	AssemblerMethodReturn LDA(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b00111010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void LDAX(Register reg) {
+	AssemblerMethodReturn LDAX(Register reg) {
 		machineCode[index++] = 0b00001010 | (reg.ax << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void LHLD(long address) {
+	AssemblerMethodReturn LHLD(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b00101010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void LXI(Register reg, long value) {
+	AssemblerMethodReturn LXI(Register reg, long value) {
 		validateD16(value)
 
 		machineCode[index++] = 0b00000001 | (reg.reg16 << 4)
 		machineCode[index++] = value & 0xff
 		machineCode[index++] = (value >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void MOV(Register dest, Register src) {
+	AssemblerMethodReturn MOV(Register dest, Register src) {
 		if (dest == M && src == M) throw new InvalidRegisterException("Source and destination cannot both be M")
 
 		machineCode[index++] = 0b01000000 | (dest.reg8 << 3) | src.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void MVI(Register reg, long value) {
+	AssemblerMethodReturn MVI(Register reg, long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b00000110 | (reg.reg8 << 3)
 		machineCode[index++] = value & 0xff
+		new AssemblerMethodReturn(2)
 	}
 
-	void NOP() {
+	AssemblerMethodReturn NOP() {
 		machineCode[index++] = 0b00000000
+		new AssemblerMethodReturn(1)
 	}
 
-	void ORA(Register reg) {
+	AssemblerMethodReturn ORA(Register reg) {
 		machineCode[index++] = 0b10110000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void ORI(long value) {
+	AssemblerMethodReturn ORI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11110110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void OUT(long port) {
+	AssemblerMethodReturn OUT(long port) {
 		validateP8(port)
 
 		machineCode[index++] = 0b11010011
 		machineCode[index++] = port
+		new AssemblerMethodReturn(2)
 	}
 
-	void PCHL() {
+	AssemblerMethodReturn PCHL() {
 		machineCode[index++] = 0b11101001
+		new AssemblerMethodReturn(1)
 	}
 
-	void POP(Register reg) {
+	AssemblerMethodReturn POP(Register reg) {
 		machineCode[index++] = 0b11000001 | (reg.pushPop << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void PUSH(Register reg) {
+	AssemblerMethodReturn PUSH(Register reg) {
 		machineCode[index++] = 0b11000101 | (reg.pushPop << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void RAL() {
+	AssemblerMethodReturn RAL() {
 		machineCode[index++] = 0b00010111
+		new AssemblerMethodReturn(1)
 	}
 
-	void RAR() {
+	AssemblerMethodReturn RAR() {
 		machineCode[index++] = 0b00011111
+		new AssemblerMethodReturn(1)
 	}
 
-	void RC() {
+	AssemblerMethodReturn RC() {
 		machineCode[index++] = 0b11011000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RET() {
+	AssemblerMethodReturn RET() {
 		machineCode[index++] = 0b11001001
+		new AssemblerMethodReturn(1)
 	}
 
-	void RIM() {
+	AssemblerMethodReturn RIM() {
 		if (target != i8085) {
 			throw new InvalidInstructionForTargetException("RIM instruction cannot be used with $target target")
 		}
 
 		machineCode[index++] = 0b00100000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RLC() {
+	AssemblerMethodReturn RLC() {
 		machineCode[index++] = 0b00000111
+		new AssemblerMethodReturn(1)
 	}
 
-	void RM() {
+	AssemblerMethodReturn RM() {
 		machineCode[index++] = 0b11111000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RNC() {
+	AssemblerMethodReturn RNC() {
 		machineCode[index++] = 0b11010000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RNZ() {
+	AssemblerMethodReturn RNZ() {
 		machineCode[index++] = 0b11000000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RP() {
+	AssemblerMethodReturn RP() {
 		machineCode[index++] = 0b11110000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RPE() {
+	AssemblerMethodReturn RPE() {
 		machineCode[index++] = 0b11101000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RPO() {
+	AssemblerMethodReturn RPO() {
 		machineCode[index++] = 0b11100000
+		new AssemblerMethodReturn(1)
 	}
 
-	void RRC() {
+	AssemblerMethodReturn RRC() {
 		machineCode[index++] = 0b00001111
+		new AssemblerMethodReturn(1)
 	}
 
-	void RST(long addressCode) {
+	AssemblerMethodReturn RST(long addressCode) {
 		validateD3(addressCode)
 
 		machineCode[index++] = 0b11000111 | (addressCode << 3)
+		new AssemblerMethodReturn(1)
 	}
 
-	void RZ() {
+	AssemblerMethodReturn RZ() {
 		machineCode[index++] = 0b11001000
+		new AssemblerMethodReturn(1)
 	}
 
-	void SBB(Register reg) {
+	AssemblerMethodReturn SBB(Register reg) {
 		machineCode[index++] = 0b10011000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void SBI(long value) {
+	AssemblerMethodReturn SBI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11011110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void SHLD(long address) {
+	AssemblerMethodReturn SHLD(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b00100010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void SIM() {
+	AssemblerMethodReturn SIM() {
 		if (target != i8085) {
 			throw new InvalidInstructionForTargetException("SIM instruction cannot be used with $target target")
 		}
 
 		machineCode[index++] = 0b00110000
+		new AssemblerMethodReturn(1)
 	}
 
-	void SPHL() {
+	AssemblerMethodReturn SPHL() {
 		machineCode[index++] = 0b11111001
+		new AssemblerMethodReturn(1)
 	}
 
-	void STA(long address) {
+	AssemblerMethodReturn STA(long address) {
 		validateA16(address)
 
 		machineCode[index++] = 0b00110010
 		machineCode[index++] = address & 0xff
 		machineCode[index++] = (address >>> 8) & 0xff
+		new AssemblerMethodReturn(3)
 	}
 
-	void STAX(Register reg) {
+	AssemblerMethodReturn STAX(Register reg) {
 		machineCode[index++] = 0b00000010 | (reg.ax << 4)
+		new AssemblerMethodReturn(1)
 	}
 
-	void STC() {
+	AssemblerMethodReturn STC() {
 		machineCode[index++] = 0b00110111
+		new AssemblerMethodReturn(1)
 	}
 
-	void SUB(Register reg) {
+	AssemblerMethodReturn SUB(Register reg) {
 		machineCode[index++] = 0b10010000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void SUI(long value) {
+	AssemblerMethodReturn SUI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11010110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void XCHG() {
+	AssemblerMethodReturn XCHG() {
 		machineCode[index++] = 0b11101011
+		new AssemblerMethodReturn(1)
 	}
 
-	void XRA(Register reg) {
+	AssemblerMethodReturn XRA(Register reg) {
 		machineCode[index++] = 0b10101000 | reg.reg8
+		new AssemblerMethodReturn(1)
 	}
 
-	void XRI(long value) {
+	AssemblerMethodReturn XRI(long value) {
 		validateD8(value)
 
 		machineCode[index++] = 0b11101110
 		machineCode[index++] = value
+		new AssemblerMethodReturn(2)
 	}
 
-	void XTHL() {
+	AssemblerMethodReturn XTHL() {
 		machineCode[index++] = 0b11100011
+		new AssemblerMethodReturn(1)
 	}
 
 	int get$i() {
 		return index
+	}
+
+	@PackageScope
+	void finish() {
+		labelManager.applyReferences(machineCode)
+	}
+
+	def propertyMissing(String name) {
+		Label label = labelManager[name]
+		label.encounter(index)
+
+		return label
+	}
+
+	def methodMissing(String name, def args) {
+		MetaMethod method = this.metaClass.methods.find { it.name == name.toUpperCase() }
+		List argList = args as List
+		Label label = argList.find { it instanceof Label } as Label
+
+		Class<?>[] retypedArgs = args.collect {
+			Class<?> type = it.getClass()
+			Label.isAssignableFrom(type) ? long : type
+		} as Class[]
+
+		if (method && label && method.isValidMethod(retypedArgs)) {
+			labelManager.addReference(index, label)
+			method.invoke(this, args.collect {
+				it instanceof Label ? 0L : it
+			} as Object[])
+		} else if (!method && argList[0] instanceof AssemblerMethodReturn) {
+			label = labelManager[name]
+			AssemblerMethodReturn asmReturn = argList[0] as AssemblerMethodReturn
+			label.encounter(index - asmReturn.bytesUsed)
+		}
+	}
+
+	static long HIGH(long value) {
+		(value >>> 8) & 0xff
+	}
+
+	static Label HIGH(Label label) {
+		new HighLabel(label)
+	}
+
+	static long LOW(long value) {
+		value & 0xff
+	}
+
+	static Label LOW(Label label) {
+		new LowLabel(label)
 	}
 
 	private static void validateD3(long value) {

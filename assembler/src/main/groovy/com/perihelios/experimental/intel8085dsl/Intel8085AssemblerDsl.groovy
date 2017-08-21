@@ -93,6 +93,7 @@ class Intel8085AssemblerDsl {
 		ClosureDelegate delegate = new ClosureDelegate(target, machineCode)
 		body.delegate = delegate
 		body()
+		delegate.finish()
 
 		if (autoHalt) {
 			delegate.HLT()

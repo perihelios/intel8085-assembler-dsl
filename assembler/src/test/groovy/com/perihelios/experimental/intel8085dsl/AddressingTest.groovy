@@ -45,4 +45,113 @@ class AddressingTest extends Specification {
 			machineCode[3007] == 0xbe as byte
 			machineCode[3008] == 0x0b as byte
 	}
+
+	def 'Labels applied correctly'() {
+		when:
+			byte[] machineCode = asm {
+				    MOV(A, B)
+				start
+					LXI(B, end)
+					LXI(D, start)
+					LXI(H, end)
+				end
+					MOV(A, B)
+				inline LXI(B, inline)
+					LXI(D, inline)
+				more_inline MVI(A, 0)
+					LDA(more_inline)
+			}
+
+		then:
+			machineCode[2] == 0x0a as byte
+			machineCode[3] == 0x00 as byte
+			machineCode[5] == 0x01 as byte
+			machineCode[6] == 0x00 as byte
+			machineCode[8] == 0x0a as byte
+			machineCode[9] == 0x00 as byte
+			machineCode[12] == 0x0b as byte
+			machineCode[13] == 0x00 as byte
+			machineCode[15] == 0x0b as byte
+			machineCode[16] == 0x00 as byte
+			machineCode[20] == 0x11 as byte
+			machineCode[21] == 0x00 as byte
+	}
+
+	def 'Label arithmetic works'() {
+		when:
+			byte[] machineCode = asm {
+				    MOV(A, B)
+				start
+					LXI(H, start + 0xaaaa)
+					LXI(H, start - 0xbbbb)
+					MVI(H, LOW(start + 5))
+					MVI(H, HIGH(start + 0x5500))
+					MVI(H, LOW(LOW(start + 5)))
+			}
+
+		then:
+			machineCode[2] == 0xab as byte
+			machineCode[3] == 0xaa as byte
+			machineCode[5] == 0x46 as byte
+			machineCode[6] == 0x44 as byte
+			machineCode[8] == 0x06 as byte
+			machineCode[10] == 0x55 as byte
+			machineCode[12] == 0x06 as byte
+	}
+
+	def 'HIGH works with literal value'() {
+		when:
+			byte[] machineCode = asm {
+				MVI(A, HIGH(0xabcd))
+			}
+
+		then:
+			machineCode[1] == 0xab as byte
+	}
+
+	def 'HIGH works with label'() {
+		when:
+			byte[] machineCode = asm {
+				MVI(A, HIGH(lbl))
+				NOP()
+
+				(1..0x1231).each {
+					MOV(A, A)
+				}
+
+				lbl
+			}
+
+		then:
+			machineCode[1] == 0x12 as byte
+			machineCode[2] == 0x00 as byte
+	}
+
+	def 'LOW works with literal value'() {
+		when:
+			byte[] machineCode = asm {
+				MVI(A, LOW(0xabcd))
+			}
+
+		then:
+			machineCode[1] == 0xcd as byte
+	}
+
+	def 'LOW works with label'() {
+		when:
+			byte[] machineCode = asm {
+				MVI(A, LOW(lbl))
+				NOP()
+
+				(1..0x1231).each {
+					MOV(A, A)
+				}
+
+				lbl
+			}
+
+		then:
+			machineCode[1] == 0x34 as byte
+			machineCode[2] == 0x00 as byte
+	}
 }
