@@ -19,6 +19,7 @@ import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterExcept
 
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
+import static groovy.lang.Closure.DELEGATE_FIRST
 
 class Intel8085AssemblerDsl {
 	static final int AUTO_SIZE = -1
@@ -80,7 +81,7 @@ class Intel8085AssemblerDsl {
 		ProcessorTarget target = i8085,
 		int bytes = AUTO_SIZE,
 		boolean autoHalt = true,
-		@DelegatesTo(ClosureDelegate) Closure body
+		@DelegatesTo(value = ClosureDelegate, strategy = DELEGATE_FIRST) Closure body
 	) {
 		if (target == null) throw new IllegalArgumentException("Target must be either $i8080 or $i8085; got null")
 		if (bytes > 65536 || (bytes < 1 && bytes != AUTO_SIZE)) {
@@ -92,6 +93,7 @@ class Intel8085AssemblerDsl {
 		byte[] machineCode = new byte[bytes == AUTO_SIZE ? 65536 : bytes]
 		ClosureDelegate delegate = new ClosureDelegate(target, machineCode)
 		body.delegate = delegate
+		body.resolveStrategy = DELEGATE_FIRST
 		body()
 		delegate.finish()
 
