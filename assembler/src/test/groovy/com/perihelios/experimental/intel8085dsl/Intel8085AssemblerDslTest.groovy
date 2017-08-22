@@ -20,7 +20,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import static Intel8085AssemblerDsl.asm
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
+import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8080
 
 class Intel8085AssemblerDslTest extends Specification {
 	def "Parameters validated"() {

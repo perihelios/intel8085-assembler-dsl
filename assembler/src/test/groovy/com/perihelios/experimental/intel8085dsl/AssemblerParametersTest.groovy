@@ -17,7 +17,7 @@ package com.perihelios.experimental.intel8085dsl
 
 import spock.lang.Specification
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
+import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
 
 class AssemblerParametersTest extends Specification {
 	def "Correct defaults applied"() {
@@ -43,7 +43,7 @@ class AssemblerParametersTest extends Specification {
 
 		then:
 			IllegalArgumentException e = thrown()
-			e.message == "Target must be either i8080 or i8085; got null"
+			e.message == "Target must be one of: ${ProcessorTarget.values().join(", ")}; got null"
 	}
 
 	def "Validates size"() {

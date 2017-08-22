@@ -15,11 +15,10 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget
 import groovy.transform.PackageScope
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
+import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8080
+import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
 
 class AssemblerParameters {
 	ProcessorTarget target = i8085
@@ -44,7 +43,7 @@ class AssemblerParameters {
 	@PackageScope
 	void validate() {
 		if (target == null) {
-			throw new IllegalArgumentException("Target must be either $i8080 or $i8085; got null")
+			throw new IllegalArgumentException("Target must be one of: $i8080, $i8085; got null")
 		}
 
 		if (autoSizeSpecified && bytesSpecified) {

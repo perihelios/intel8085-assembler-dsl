@@ -18,16 +18,16 @@ package com.perihelios.experimental.intel8085dsl
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.A
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.B
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.C
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.D
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.E
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.H
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.L
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.M
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.PSW
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register.SP
+import static com.perihelios.experimental.intel8085dsl.Register.A
+import static com.perihelios.experimental.intel8085dsl.Register.B
+import static com.perihelios.experimental.intel8085dsl.Register.C
+import static com.perihelios.experimental.intel8085dsl.Register.D
+import static com.perihelios.experimental.intel8085dsl.Register.E
+import static com.perihelios.experimental.intel8085dsl.Register.H
+import static com.perihelios.experimental.intel8085dsl.Register.L
+import static com.perihelios.experimental.intel8085dsl.Register.M
+import static com.perihelios.experimental.intel8085dsl.Register.PSW
+import static com.perihelios.experimental.intel8085dsl.Register.SP
 import static Intel8085AssemblerDsl.asm
 
 class InstructionTest extends Specification {

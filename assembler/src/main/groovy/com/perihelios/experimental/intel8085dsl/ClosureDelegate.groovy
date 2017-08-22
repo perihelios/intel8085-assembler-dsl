@@ -15,18 +15,16 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget
-import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionForTargetException
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
 import groovy.transform.PackageScope
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateA16
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD16
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD3
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD8
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateP8
+import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
 
 @PackageScope
 class ClosureDelegate {
