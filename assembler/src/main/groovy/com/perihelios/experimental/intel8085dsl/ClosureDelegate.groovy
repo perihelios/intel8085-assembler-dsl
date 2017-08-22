@@ -589,7 +589,28 @@ class ClosureDelegate {
 		new AssemblerMethodReturn(1)
 	}
 
-	int get$i() {
+	Label get$i() {
+		new CurrentLocationLabel(index)
+	}
+
+	static long HIGH(long value) {
+		(value >>> 8) & 0xff
+	}
+
+	static Label HIGH(Label label) {
+		new HighLabel(label)
+	}
+
+	static long LOW(long value) {
+		value & 0xff
+	}
+
+	static Label LOW(Label label) {
+		new LowLabel(label)
+	}
+
+	@PackageScope
+	int getIndex() {
 		return index
 	}
 
@@ -598,14 +619,14 @@ class ClosureDelegate {
 		labelManager.applyReferences(machineCode)
 	}
 
-	def propertyMissing(String name) {
+	private def propertyMissing(String name) {
 		Label label = labelManager[name]
 		label.encounter(index)
 
 		return label
 	}
 
-	def methodMissing(String name, def args) {
+	private def methodMissing(String name, def args) {
 		MetaMethod method = this.metaClass.methods.find { it.name == name.toUpperCase() }
 		List argList = args as List
 		Label label = argList.find { it instanceof Label } as Label
@@ -625,21 +646,5 @@ class ClosureDelegate {
 			AssemblerMethodReturn asmReturn = argList[0] as AssemblerMethodReturn
 			label.encounter(index - asmReturn.bytesUsed)
 		}
-	}
-
-	static long HIGH(long value) {
-		(value >>> 8) & 0xff
-	}
-
-	static Label HIGH(Label label) {
-		new HighLabel(label)
-	}
-
-	static long LOW(long value) {
-		value & 0xff
-	}
-
-	static Label LOW(Label label) {
-		new LowLabel(label)
 	}
 }

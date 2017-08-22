@@ -26,6 +26,8 @@ class AddressingTest extends Specification {
 				LXI(H, $i)
 				LXI(H, $i)
 				LXI(H, $i + 10)
+				MVI(A, LOW($i + 5))
+				MVI(A, LOW($i - 5))
 
 				(1..1000).each {
 					LXI(H, $i)
@@ -42,8 +44,12 @@ class AddressingTest extends Specification {
 			machineCode[7] == 0x10 as byte
 			machineCode[8] == 0x00 as byte
 
-			machineCode[3007] == 0xbe as byte
-			machineCode[3008] == 0x0b as byte
+			machineCode[10] == 0x0e as byte
+
+			machineCode[12] == 0x06 as byte
+
+			machineCode[3011] == 0xc2 as byte
+			machineCode[3012] == 0x0b as byte
 	}
 
 	def 'Labels applied correctly'() {
