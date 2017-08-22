@@ -81,7 +81,7 @@ class Intel8085AssemblerDsl {
 		ProcessorTarget target = i8085,
 		int bytes = AUTO_SIZE,
 		boolean autoHalt = true,
-		@DelegatesTo(value = ClosureDelegate, strategy = DELEGATE_FIRST) Closure body
+		@DelegatesTo(ClosureDelegate) Closure body
 	) {
 		if (target == null) throw new IllegalArgumentException("Target must be either $i8080 or $i8085; got null")
 		if (bytes > 65536 || (bytes < 1 && bytes != AUTO_SIZE)) {
