@@ -19,10 +19,14 @@ import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorT
 import com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.Register
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionForTargetException
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
-import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
 import groovy.transform.PackageScope
 
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
+import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateA16
+import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD16
+import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD3
+import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD8
+import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateP8
 
 @PackageScope
 class ClosureDelegate {
@@ -637,111 +641,5 @@ class ClosureDelegate {
 
 	static Label LOW(Label label) {
 		new LowLabel(label)
-	}
-
-	private static void validateD3(long value) {
-		if (value < 0 || value > 7) {
-			String hex = toCompressedHex(value, 0xf)
-			String octal = toCompressedOctal(value, 077)
-			String binary = toCompressedBinary(value, 0b1111)
-
-			throw new OverflowException(
-				"Operand value must be from 0 to 7; got $value ($hex, $octal, $binary)"
-			)
-		}
-	}
-
-	private static void validateD8(long value) {
-		if (value < -128 || value > 255) {
-			String hex = toCompressedHex(value, 0xfff)
-			String octal = toCompressedOctal(value, 0777)
-			String binary = toCompressedBinary(value, 0b111111111)
-
-			throw new OverflowException(
-				"Operand value must be from -128 to 255; got $value ($hex, $octal, $binary)"
-			)
-		}
-	}
-
-	private static void validateP8(long value) {
-		if (value < 0 || value > 255) {
-			String hex = toCompressedHex(value, 0xfff)
-			String octal = toCompressedOctal(value, 0777)
-			String binary = toCompressedBinary(value, 0b111111111)
-
-			throw new OverflowException(
-				"Operand value must be from 0 to 255; got $value ($hex, $octal, $binary)"
-			)
-		}
-	}
-
-	private static void validateA16(long value) {
-		if (value < 0 || value > 65535) {
-			String hex = toCompressedHex(value, 0xfffff)
-			String octal = toCompressedOctal(value, 0777777)
-			String binary = toCompressedBinary(value, 0b11111111111111111)
-
-			throw new OverflowException(
-				"Operand value must be from 0 to 65535; got $value ($hex, $octal, $binary)"
-			)
-		}
-	}
-
-	private static void validateD16(long value) {
-		if (value < -32768 || value > 65535) {
-			String hex = toCompressedHex(value, 0xfffff)
-			String octal = toCompressedOctal(value, 0777777)
-			String binary = toCompressedBinary(value, 0b11111111111111111)
-
-			throw new OverflowException(
-				"Operand value must be from -32768 to 65535; got $value ($hex, $octal, $binary)"
-			)
-		}
-	}
-
-	private static String toCompressedHex(long value, long minBitWidthMask) {
-		if (value < 0) {
-			long fMask = 0xf000000000000000L
-			long negativeMask = 0x800000000000000L
-			while ((fMask < 0 || fMask > minBitWidthMask) && (value & fMask) == fMask && (negativeMask & value) != 0) {
-				value &= ~fMask
-				fMask >>>= 4
-				negativeMask >>>= 4
-			}
-		}
-
-		return "0x" + Long.toUnsignedString(value, 16)
-	}
-
-	private static String toCompressedOctal(long value, long minBitWidthMask) {
-		long negativeMask = 0400000000000000000000L
-
-		if (value < 0 && (value & negativeMask) != 0) {
-			value &= Long.MAX_VALUE
-			negativeMask >>>= 3
-
-			long fMask = 0700000000000000000000L
-			while (fMask > minBitWidthMask && (value & fMask) == fMask && (negativeMask & value) != 0) {
-				value &= ~fMask
-				fMask >>>= 3
-				negativeMask >>>= 3
-			}
-		}
-
-		return "0" + Long.toUnsignedString(value, 8)
-	}
-
-	private static String toCompressedBinary(long value, long minBitWidthMask) {
-		if (value < 0) {
-			long fMask = 0b1000000000000000000000000000000000000000000000000000000000000000L
-			long negativeMask = 0b100000000000000000000000000000000000000000000000000000000000000L
-			while ((fMask < 0 || fMask > minBitWidthMask) && (value & fMask) == fMask && (negativeMask & value) != 0) {
-				value &= ~fMask
-				fMask >>>= 1
-				negativeMask >>>= 1
-			}
-		}
-
-		return "0b" + Long.toUnsignedString(value, 2)
 	}
 }
