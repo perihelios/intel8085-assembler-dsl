@@ -19,53 +19,27 @@ import com.perihelios.experimental.intel8085dsl.exceptions.InvalidInstructionFor
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static Intel8085AssemblerDsl.AUTO_SIZE
 import static Intel8085AssemblerDsl.asm
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 
 class Intel8085AssemblerDslTest extends Specification {
-	def "target validated"() {
-		when:
-			asm(null) {}
-
-		then:
-			IllegalArgumentException e = thrown()
-			e.message == "Target must be either i8080 or i8085; got null"
-	}
-
-	def "bytes validated"() {
+	def "Parameters validated"() {
 		setup:
-			IllegalArgumentException expected
+			def params = Mock(AssemblerParameters)
 
 		when:
-			asm(i8085, 65537) {}
+			asm(params) {}
 
 		then:
-			expected = thrown()
-			expected.message == "Bytes must be from 1-65536, or AUTO_SIZE (magic number: -1); got 65537"
-
-		when:
-			asm(i8085, 0) {}
-
-		then:
-			expected = thrown()
-			expected.message == "Bytes must be from 1-65536, or AUTO_SIZE (magic number: -1); got 0"
-
-		when:
-			asm(i8085, -2) {}
-
-		then:
-			expected = thrown()
-			expected.message == "Bytes must be from 1-65536, or AUTO_SIZE (magic number: -1); got -2"
+			1 * params.validate()
 	}
 
-	def "AUTO_SIZE automatically sizes array"() {
+	def "autoSize automatically sizes array"() {
 		setup:
 			byte[] machineCode
 
 		when:
-			machineCode = asm(i8085, AUTO_SIZE, false) {
+			machineCode = asm(new AssemblerParameters(autoSize: true, autoHalt: false)) {
 				MOV(A, B)
 				LXI(B, 0xabcd)
 			}
@@ -79,13 +53,13 @@ class Intel8085AssemblerDslTest extends Specification {
 			byte[] machineCode
 
 		when:
-			machineCode = asm(i8085, 4, true) {}
+			machineCode = asm(new AssemblerParameters(size: 4, autoHalt: true)) {}
 
 		then:
 			machineCode[0] == 0x76 as byte
 
 		when:
-			machineCode = asm(i8085, 4, false) {}
+			machineCode = asm(new AssemblerParameters(size: 4, autoHalt: false)) {}
 
 		then:
 			machineCode[0] == 0x00 as byte
@@ -94,7 +68,7 @@ class Intel8085AssemblerDslTest extends Specification {
 	@Unroll
 	"8080 target rejects unimplemented instruction #inst"() {
 		when:
-			asm(i8080) {
+			asm(new AssemblerParameters(target: i8080)) {
 				"$inst"()
 			}
 

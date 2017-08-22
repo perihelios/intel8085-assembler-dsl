@@ -17,13 +17,9 @@ package com.perihelios.experimental.intel8085dsl
 
 import com.perihelios.experimental.intel8085dsl.exceptions.InvalidRegisterException
 
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8080
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 import static groovy.lang.Closure.DELEGATE_FIRST
 
 class Intel8085AssemblerDsl {
-	static final int AUTO_SIZE = -1
-
 	static enum ProcessorTarget {
 		i8080, i8085
 	}
@@ -78,30 +74,23 @@ class Intel8085AssemblerDsl {
 	}
 
 	static byte[] asm(
-		ProcessorTarget target = i8085,
-		int bytes = AUTO_SIZE,
-		boolean autoHalt = true,
+		AssemblerParameters params = new AssemblerParameters(),
 		@DelegatesTo(ClosureDelegate) Closure body
 	) {
-		if (target == null) throw new IllegalArgumentException("Target must be either $i8080 or $i8085; got null")
-		if (bytes > 65536 || (bytes < 1 && bytes != AUTO_SIZE)) {
-			throw new IllegalArgumentException(
-				"Bytes must be from 1-65536, or AUTO_SIZE (magic number: $AUTO_SIZE); got " + bytes
-			)
-		}
+		params.validate()
 
-		byte[] machineCode = new byte[bytes == AUTO_SIZE ? 65536 : bytes]
-		ClosureDelegate delegate = new ClosureDelegate(target, machineCode)
+		byte[] machineCode = new byte[params.autoSize ? 65536 : params.size]
+		ClosureDelegate delegate = new ClosureDelegate(params.target, machineCode)
 		body.delegate = delegate
 		body.resolveStrategy = DELEGATE_FIRST
 		body()
 		delegate.finish()
 
-		if (autoHalt) {
+		if (params.autoHalt) {
 			delegate.HLT()
 		}
 
-		if (bytes == AUTO_SIZE) {
+		if (params.autoSize) {
 			return Arrays.copyOf(machineCode, delegate.index)
 		} else {
 			return machineCode

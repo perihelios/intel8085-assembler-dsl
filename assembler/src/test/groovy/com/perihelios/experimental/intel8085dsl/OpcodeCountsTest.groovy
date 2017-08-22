@@ -19,14 +19,12 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import static Intel8085AssemblerDsl.asm
-import static Intel8085AssemblerDsl.getAUTO_SIZE
-import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.ProcessorTarget.i8085
 
 class OpcodeCountsTest extends Specification {
 	@Unroll
 	"Opcode counts match (using #undefined8 for values)"() {
 		when:
-			byte[] machineCode = asm(i8085, AUTO_SIZE, false) {
+			byte[] machineCode = asm(new AssemblerParameters(autoHalt: false)) {
 				ACI(undefined8)
 				ADC(A)
 				ADC(B)
