@@ -7,7 +7,7 @@ are 8-bit microprocessors with 64K of memory addressability. They have 78 and 80
 mnemonics, respectively. This assembler allows you to create machine code for
 these processors in Groovy, using a domain-specific language (DSL).
 
-## Example:
+## Example
 This is a simple (and nonsensical) example showing the use of a handful of
 mnemonics and registers, and the use of labels:
 
