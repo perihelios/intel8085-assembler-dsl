@@ -15,6 +15,9 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import groovy.transform.PackageScope
+
+@PackageScope
 abstract class DelegatingLabel implements Label {
 	protected final Label delegate
 

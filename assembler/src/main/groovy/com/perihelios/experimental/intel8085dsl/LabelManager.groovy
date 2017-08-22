@@ -15,6 +15,9 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import groovy.transform.PackageScope
+
+@PackageScope
 class LabelManager {
 	private final Map<String, Label> labels = new LinkedHashMap<>(256)
 	private final List<Reference> references = new ArrayList<>(1024)

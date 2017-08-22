@@ -15,6 +15,9 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import groovy.transform.PackageScope
+
+@PackageScope
 class OffsetLabel extends DelegatingLabel {
 	private final int offset
 
