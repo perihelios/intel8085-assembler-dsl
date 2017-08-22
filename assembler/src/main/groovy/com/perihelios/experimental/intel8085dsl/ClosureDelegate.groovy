@@ -28,6 +28,8 @@ import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
 
 @PackageScope
 class ClosureDelegate {
+	private static final Map<String, MetaMethod> MNEMONIC_METHODS = cacheMnemonicMethods()
+
 	private final LabelManager labelManager
 	private final ProcessorTarget target
 	private final byte[] machineCode
@@ -625,24 +627,70 @@ class ClosureDelegate {
 	}
 
 	private def methodMissing(String name, def args) {
-		MetaMethod method = this.metaClass.methods.find { it.name == name.toUpperCase() }
-		List argList = args as List
-		Label label = argList.find { it instanceof Label } as Label
+		args = args as Object[]
 
-		Class<?>[] retypedArgs = args.collect {
-			Class<?> type = it.getClass()
-			Label.isAssignableFrom(type) ? long : type
-		} as Class[]
+		if (isMnemonicMethod(name)) return handleMnemonicMethod(name, args)
+		if (isMacro(name)) return handleMacro(name, args)
+		if (isLabelAttempt(args)) return handleLabelAttempt(name, args)
 
-		if (method && label && method.isValidMethod(retypedArgs)) {
-			labelManager.addReference(index, label)
-			method.invoke(this, args.collect {
-				it instanceof Label ? 0L : it
-			} as Object[])
-		} else if (!method && argList[0] instanceof AssemblerMethodReturn) {
-			label = labelManager[name]
-			AssemblerMethodReturn asmReturn = argList[0] as AssemblerMethodReturn
-			label.encounter(index - asmReturn.bytesUsed)
+		throw new MissingMethodException(name, this.class, args as Object[])
+	}
+
+	private static boolean isMnemonicMethod(String name) {
+		String upperName = name.toUpperCase()
+
+		if (name != upperName && name != name.toLowerCase()) {
+			return false
+		}
+
+		return MNEMONIC_METHODS.containsKey(upperName)
+	}
+
+	private def handleMnemonicMethod(String name, Object[] args) {
+		MetaMethod mnemonicMethod = MNEMONIC_METHODS[name.toUpperCase()]
+
+		if (mnemonicMethod.isValidMethod(args)) {
+			return mnemonicMethod.invoke(this, args)
+		}
+
+		List<Class<?>> parameterTypes = mnemonicMethod.nativeParameterTypes as List
+
+		if (parameterTypes.size() == args.length) {
+			if (parameterTypes[0] == long && args[0] instanceof Label) {
+				labelManager.addReference(index, args[0] as Label)
+				return mnemonicMethod.invoke(this, 0L)
+			}
+
+			if (parameterTypes[1] == long && args[1] instanceof Label) {
+				labelManager.addReference(index, args[1] as Label)
+				return mnemonicMethod.invoke(this, args[0], 0L)
+			}
+		}
+
+		throw new MissingMethodException(name, this.class, args)
+	}
+
+	private static boolean isLabelAttempt(Object[] objects) {
+		objects.length == 1 && objects[0] instanceof AssemblerMethodReturn
+	}
+
+	private void handleLabelAttempt(String name, Object[] args) {
+		Label label = labelManager[name]
+		label.encounter(index - (args[0] as AssemblerMethodReturn).bytesUsed)
+	}
+
+	private boolean isMacro(String name) {
+		return false
+	}
+
+	private void handleMacro(String name, Object[] args) {
+	}
+
+	private static Map<String, MetaMethod> cacheMnemonicMethods() {
+		ClosureDelegate.metaClass.methods.findAll {
+			it.returnType == AssemblerMethodReturn
+		}.collectEntries(new HashMap<String, MetaMethod>(256)) {
+			[it.name, it]
 		}
 	}
 }
