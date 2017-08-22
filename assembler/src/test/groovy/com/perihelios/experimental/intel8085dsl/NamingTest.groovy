@@ -36,6 +36,22 @@ class NamingTest extends Specification {
 			machineCode[4] == 0x12 as byte
 	}
 
+	def "Lowercase register names work"() {
+		when:
+			byte[] machineCode = asm {
+				MOV(a, b)
+				PUSH(psw)
+				DCX(sp)
+			}
+
+		then:
+			machineCode[0] == 0x78 as byte
+
+			machineCode[1] == 0xf5 as byte
+
+			machineCode[2] == 0x3b as byte
+	}
+
 	def "Mixed-case mnemonics don't work"() {
 		when:
 			asm { mVI B, 10 }

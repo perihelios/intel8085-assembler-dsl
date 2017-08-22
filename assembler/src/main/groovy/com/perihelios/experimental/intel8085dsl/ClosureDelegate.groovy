@@ -52,6 +52,9 @@ class ClosureDelegate {
 	final Register SP = Register.SP
 	final Register PSW = Register.PSW
 
+	final Register sp = Register.SP
+	final Register psw = Register.PSW
+
 	AssemblerMethodReturn ACI(long value) {
 		validateD8(value)
 
