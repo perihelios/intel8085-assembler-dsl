@@ -25,12 +25,14 @@ import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateD8
 import static com.perihelios.experimental.intel8085dsl.NumericOperandValidators.validateP8
 import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
+import static groovy.lang.Closure.DELEGATE_FIRST
 
 @PackageScope
 class ClosureDelegate {
 	private static final Map<String, MetaMethod> MNEMONIC_METHODS = cacheMnemonicMethods()
 
 	private final LabelManager labelManager
+	private final Map<String, Closure> macros = new HashMap<>(256)
 	private final ProcessorTarget target
 	private final byte[] machineCode
 	private int index
@@ -612,6 +614,12 @@ class ClosureDelegate {
 		new LowLabel(label)
 	}
 
+	void macro(String name, @DelegatesTo(ClosureDelegate) Closure body) {
+		body.delegate = this
+		body.resolveStrategy = DELEGATE_FIRST
+		macros.put(name, body)
+	}
+
 	@PackageScope
 	int getIndex() {
 		return index
@@ -683,10 +691,11 @@ class ClosureDelegate {
 	}
 
 	private boolean isMacro(String name) {
-		return false
+		return macros.containsKey(name)
 	}
 
 	private void handleMacro(String name, Object[] args) {
+		macros[name].call(args as List)
 	}
 
 	private static Map<String, MetaMethod> cacheMnemonicMethods() {
