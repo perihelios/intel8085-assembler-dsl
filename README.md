@@ -9,7 +9,8 @@ these processors in Groovy, using a domain-specific language (DSL).
 
 ## Example
 This is a simple (and nonsensical) example showing the use of a handful of
-mnemonics and registers, and the use of labels:
+mnemonics and registers; the use of labels; and a macro declaration and
+invocation:
 
 ```
 asm {
