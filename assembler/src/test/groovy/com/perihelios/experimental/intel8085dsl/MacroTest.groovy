@@ -15,6 +15,7 @@
 */
 package com.perihelios.experimental.intel8085dsl
 
+import com.perihelios.experimental.intel8085dsl.exceptions.UndefinedLabelException
 import spock.lang.Specification
 
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.asm
@@ -85,5 +86,82 @@ class MacroTest extends Specification {
 			machineCode[4] == 0x5f as byte
 
 			machineCode[5] == 0xf1 as byte
+	}
+
+	def "Labels outside macro can't be referenced inside"() {
+		when:
+			asm {
+				start
+				macro("foo") {
+					LXI(B, start)
+				}
+				foo()
+			}
+
+		then:
+			thrown(UndefinedLabelException)
+	}
+
+	def "Labels inside macro can't be referenced outside"() {
+		when:
+			asm {
+				macro("foo") {
+					loop NOP()
+				}
+				foo()
+				LXI(B, loop)
+			}
+
+		then:
+			thrown(UndefinedLabelException)
+	}
+
+	def "Labels resolved appropriately when using macros"() {
+		setup:
+			int startingAddress = 0xab00
+
+		when:
+			byte[] machineCode = asm {
+				macro("foo") {
+					start
+						LXI(B, start)
+						LXI(B, end)
+					end
+				}
+
+				(1..startingAddress).each { NOP() }
+
+				start
+					LXI(B, start)
+					LXI(B, end)
+					foo()
+					foo()
+					LXI(B, start)
+					LXI(B, end)
+				end
+			}
+
+		then:
+			machineCode[startingAddress + 1] == 0x00 as byte
+			machineCode[startingAddress + 2] == 0xab as byte
+
+			machineCode[startingAddress + 4] == 0x18 as byte
+			machineCode[startingAddress + 5] == 0xab as byte
+
+			machineCode[startingAddress + 7] == 0x06 as byte
+			machineCode[startingAddress + 8] == 0xab as byte
+			machineCode[startingAddress + 10] == 0x0c as byte
+			machineCode[startingAddress + 11] == 0xab as byte
+
+			machineCode[startingAddress + 13] == 0x0c as byte
+			machineCode[startingAddress + 14] == 0xab as byte
+			machineCode[startingAddress + 16] == 0x12 as byte
+			machineCode[startingAddress + 17] == 0xab as byte
+
+			machineCode[startingAddress + 19] == 0x00 as byte
+			machineCode[startingAddress + 20] == 0xab as byte
+
+			machineCode[startingAddress + 22] == 0x18 as byte
+			machineCode[startingAddress + 23] == 0xab as byte
 	}
 }

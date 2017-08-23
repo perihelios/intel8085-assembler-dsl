@@ -19,20 +19,37 @@ import groovy.transform.PackageScope
 
 @PackageScope
 class LabelManager {
-	private final Map<String, Label> labels = new LinkedHashMap<>(256)
-	private final List<Reference> references = new ArrayList<>(1024)
+	private final Deque<Map<String, Label>> labels = new ArrayDeque<>()
+	private final Deque<List<Reference>> references = new ArrayDeque<>()
+	private final List<Reference> allReferences = new ArrayList<>(1024)
+
+	LabelManager() {
+		push()
+	}
 
 	Label getAt(String name) {
-		labels.computeIfAbsent(name, { new BasicLabel(name) })
+		labels.peek().computeIfAbsent(name, { new BasicLabel(name) })
 	}
 
 	List<Reference> addReference(int offset, Label label) {
 		label.reference(offset)
-		references << new Reference(offset, label)
+		Reference ref = new Reference(offset, label)
+		references.peek() << ref
+		allReferences << ref
 	}
 
 	void applyReferences(byte[] machineCode) {
-		references*.apply(machineCode)
+		references.peek()*.apply(machineCode)
+	}
+
+	void push() {
+		labels.push(new LinkedHashMap<>(256))
+		references.push(new ArrayList<>(1024))
+	}
+
+	void pop() {
+		labels.pop()
+		references.pop()
 	}
 
 	private static class Reference {

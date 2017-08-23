@@ -695,7 +695,13 @@ class ClosureDelegate {
 	}
 
 	private void handleMacro(String name, Object[] args) {
-		macros[name].call(args as List)
+		labelManager.push()
+		try {
+			macros[name].call(args as List)
+			labelManager.applyReferences(machineCode)
+		} finally {
+			labelManager.pop()
+		}
 	}
 
 	private static Map<String, MetaMethod> cacheMnemonicMethods() {
