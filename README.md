@@ -62,12 +62,12 @@ Inside the `asm` block, you will add assembly instructions, labels, and macros.
 The `asm` method optionally takes some parameters that control the assembly
 process.
 
-|Parameter|Allowed Values|Default|Description
+|Parameter|Allowed Values|Default|Description|
 |---|---|---|---|
 |`target`|`i8080`, `i8085`|`i8085`|Target processor for which to assemble (use constants from class [ProcessorTarget](assembler/src/main/groovy/com/perihelios/experimental/intel8085dsl/ProcessorTarget.groovy))|
 |`size`|1-65536|None (use `autoSize`)|Size, in bytes, of buffer into which machine code assembled (parameter must not be specified if `autoSize` specified)|
 |`autoSize`|`true`, `false`|`true`|Automatically produce machine code buffer of exact size needed for given instructions (parameter must not be specified if `size` specified)|
-|`autoHlt`|`true`, `false`|`true`|Automatically add HLT instruction at end of machine code buffer
+|`autoHlt`|`true`, `false`|`true`|Automatically add HLT instruction at end of machine code buffer|
 
 Parameters are passed in an
 [AssemblerParameters](assembler/src/main/groovy/com/perihelios/experimental/intel8085dsl/AssemblerParameters.groovy)
@@ -84,5 +84,88 @@ The Intel 8085 has 80 instructions, and the 8080 has 78. Both processors have
 the same seven 8-bit registers, plus a set of flags. The 8085 has an additional
 three-bit interrupt mask, accessed through the RIM and SIM instructions.
 
+### Current Location Pointer
+The current location (offset, in bytes, from the beginning of the assembly
+language program) is available as the special symbol `$i`. (This differs from
+the `$` symbol traditionally used in Intel assemblers as a limitation of
+Groovy—symbols in Groovy cannot be a lone dollar sign.) You may add or subtract
+a literal number from the value.
+
+```
+LXI(H, $i)
+JMP($i + 35)
+CNC($i - 0x209)
+```
+
+The value represented by `$i` is 16 bits in size. To access the high- or
+low-order bytes of this value, use `HIGH` or `LOW`, respectively:
+
+```
+MVI(A, HIGH($i))
+ORI(LOW($i))
+ANI(HIGH($i - 10) + 7)
+```
+
+### Labels
+Labels represent the location (offset, in bytes, from the beginning of the
+assembly language program) at which they are declared. They are declared by
+placing them on a line by themselves, or in front of an instruction:
+
+```
+start
+    MVI(A, 20)
+end RST(7)
+```
+
+Labels must be all one word, composed of letters and numbers, and must begin
+with a letter. Using indentation to make labels more visible is traditional, but
+not required.
+
+Instructions use labels to refer to a location by name, rather than using a
+literal number. For example, the two JNZ instructions in this program are
+identical:
+
+```
+loop
+    ...
+    DCR(C)
+    JNZ(loop)
+    JNZ(0) // identical to above
+```
+
+Here, `loop` is declared at location 0. However, if more instructions or data
+were added above the `loop` declaration, its value would no longer be 0; it
+would automatically adjust to represent the correct value for its new location:
+
+```
+    MVI(C, 20)
+    AND(B)
+loop
+    ...
+    DCR(C)
+    JNZ(loop) // loop now represents the number 3
+```
+
+The value represented by a label is 16 bits in size. To access the high- or
+low-order bytes of this value, use `HIGH` or `LOW`, respectively:
+
+```
+    XOR(A)
+lbl
+    MVI(A, HIGH(lbl))
+    MVI(B, LOW(lbl))
+```
+
+You may add or subtract a literal number from a label:
+
+```
+start
+    MVI(A, start + 10)
+    MVI(B, HIGH(start - 17) + 5)
+```
+
+### Macros
+
 ## License
-Apache 2.0 (see [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for details).
+Apache 2.0 (see [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for
+details).
