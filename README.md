@@ -160,7 +160,7 @@ You may add or subtract a literal number from a label:
 
 ```
 start
-    MVI(A, start + 10)
+    LXI(H, start + 10)
     MVI(B, HIGH(start - 17) + 5)
 ```
 
