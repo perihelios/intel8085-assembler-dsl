@@ -23,8 +23,8 @@ import static com.perihelios.experimental.intel8085dsl.ProcessorTarget.i8085
 class AssemblerParameters {
 	ProcessorTarget target = i8085
 	int size
-	boolean autoHalt = true
 	boolean autoSize = true
+	boolean autoHalt = true
 
 	private boolean bytesSpecified = false
 	private boolean autoSizeSpecified = false
