@@ -13,6 +13,14 @@ mnemonics and registers, and the use of labels:
 
 ```
 asm {
+    macro("ADDI") { reg, value ->
+        PUSH(PSW)
+        MOV(A, reg)
+        ADI(value)
+        MOV(reg, A)
+        POP(PSW)
+    }
+
     start
         MVI(B, 17)
         LDA(0x1726)
@@ -22,6 +30,7 @@ asm {
         PUSH(PSW)
         PUSH(H)
         RST(6)
+        ADDI(E, 0x23)
         CMP(B)
         JPO($i + 6)
         CALL(0x908)
