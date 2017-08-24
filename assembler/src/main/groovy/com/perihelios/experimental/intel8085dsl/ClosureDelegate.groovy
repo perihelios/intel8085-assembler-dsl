@@ -614,6 +614,21 @@ class ClosureDelegate {
 		new LowLabel(label)
 	}
 
+	AssemblerMethodReturn DB(long value) {
+		validateD8(value)
+		machineCode[index++] = value & 0xff
+
+		new AssemblerMethodReturn(bytesUsed: 1, skip: 0)
+	}
+
+	AssemblerMethodReturn DW(long value) {
+		validateD16(value)
+		machineCode[index++] = value & 0xff
+		machineCode[index++] = (value >>> 8) & 0xff
+
+		new AssemblerMethodReturn(bytesUsed: 2, skip: 0)
+	}
+
 	void macro(String name, @DelegatesTo(ClosureDelegate) Closure body) {
 		body.delegate = this
 		body.resolveStrategy = DELEGATE_FIRST
