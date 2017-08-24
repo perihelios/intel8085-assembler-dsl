@@ -9,8 +9,8 @@ using a domain-specific language (DSL).
 
 ## Example
 This is a simple (and nonsensical) example showing the use of a handful of
-mnemonics and registers; the use of labels; and a macro declaration and
-invocation:
+mnemonics and registers; data directives; declaration and referencing of labels;
+and a macro declaration and invocation:
 
 ```
 asm {
@@ -21,6 +21,10 @@ asm {
         MOV(reg, A)
         POP(PSW)
     }
+
+    DB(10)
+    DW(0x1234)
+    DS(200)
 
     start
         MVI(B, 17)
