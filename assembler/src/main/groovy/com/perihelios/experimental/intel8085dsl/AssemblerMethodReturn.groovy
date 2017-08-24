@@ -19,9 +19,6 @@ import groovy.transform.PackageScope
 
 @PackageScope
 class AssemblerMethodReturn {
-	final int bytesUsed
-
-	AssemblerMethodReturn(int bytesUsed) {
-		this.bytesUsed = bytesUsed
-	}
+	int bytesUsed
+	int skip = 1
 }

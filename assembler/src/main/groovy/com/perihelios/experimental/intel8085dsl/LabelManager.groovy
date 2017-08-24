@@ -31,9 +31,9 @@ class LabelManager {
 		labels.peek().computeIfAbsent(name, { new BasicLabel(name) })
 	}
 
-	List<Reference> addReference(int offset, Label label) {
+	List<Reference> addReference(int offset, Label label, int skip) {
 		label.reference(offset)
-		Reference ref = new Reference(offset, label)
+		Reference ref = new Reference(offset, label, skip)
 		references.peek() << ref
 		allReferences << ref
 	}
@@ -53,21 +53,21 @@ class LabelManager {
 	}
 
 	private static class Reference {
-		private static final int OPCODE_SKIP_BYTES = 1
+		final int offset
+		final Label label
+		final int skip
 
-		protected final int offset
-		protected final Label label
-
-		Reference(int offset, Label label) {
+		Reference(int offset, Label label, int skip) {
 			this.offset = offset
 			this.label = label
+			this.skip = skip
 		}
 
 		void apply(byte[] machineCode) {
 			int labelOffset = label.offset
 
 			for (int i = 0; i < label.byteCount; i++) {
-				machineCode[offset + OPCODE_SKIP_BYTES + i] = labelOffset & 0xff
+				machineCode[offset + skip + i] = labelOffset & 0xff
 				labelOffset >>>= 8
 			}
 		}
