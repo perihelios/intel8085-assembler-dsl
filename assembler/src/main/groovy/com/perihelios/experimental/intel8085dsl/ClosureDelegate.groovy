@@ -629,6 +629,13 @@ class ClosureDelegate {
 		new AssemblerMethodReturn(bytesUsed: 2, skip: 0)
 	}
 
+	AssemblerMethodReturn DS(long size) {
+		validateA16(size)
+		index += size
+
+		new AssemblerMethodReturn(bytesUsed: size, skip: 0)
+	}
+
 	void macro(String name, @DelegatesTo(ClosureDelegate) Closure body) {
 		body.delegate = this
 		body.resolveStrategy = DELEGATE_FIRST

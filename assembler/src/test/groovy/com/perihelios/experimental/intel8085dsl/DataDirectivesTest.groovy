@@ -34,6 +34,14 @@ class DataDirectivesTest extends Specification {
 			"(0xf7fff, 0677777, 0b10111111111111111)"),
 		new InvalidValue(65536, "Operand value must be from -32768 to 65535; got 65536 " +
 			"(0x10000, 0200000, 0b10000000000000000)")
+	]) + combine(["DS"], [
+		new InvalidValue(-1, "Operand value must be from 0 to 65535; got -1 (0xfffff, 0777777, 0b11111111111111111)"),
+		new InvalidValue(65536, "Operand value must be from 0 to 65535; got 65536" +
+			" (0x10000, 0200000, 0b10000000000000000)"),
+		new InvalidValue(-1_231_015_361, "Operand value must be from 0 to 65535; got -1231015361 " +
+			"(0xb6a0323f, 066650031077, 0b10110110101000000011001000111111)"),
+		new InvalidValue(260_055, "Operand value must be from 0 to 65535; got 260055 " +
+			"(0x3f7d7, 0773727, 0b111111011111010111)")
 	])
 
 	@Unroll
@@ -104,5 +112,33 @@ class DataDirectivesTest extends Specification {
 			machineCode[7] == 0x00 as byte
 			machineCode[8] == 0x00 as byte
 			machineCode[9] == 0x09 as byte
+	}
+
+	def "DS series"() {
+		when:
+			byte[] machineCode = asm(new AssemblerParameters(autoHalt: false)) {
+				start
+					LXI(B, start)
+					LXI(B, mid)
+					LXI(B, end)
+					DS(10)
+				mid	DS(15)
+					DS(20)
+				end
+			}
+
+		then:
+			machineCode[1] == 0 as byte
+			machineCode[2] == 0 as byte
+
+			machineCode[4] == 19 as byte
+			machineCode[5] == 0 as byte
+
+			machineCode[7] == 54 as byte
+			machineCode[8] == 0 as byte
+
+			Arrays.copyOfRange(machineCode, 10, 55) == new byte[45]
+
+			machineCode.length == 54
 	}
 }
