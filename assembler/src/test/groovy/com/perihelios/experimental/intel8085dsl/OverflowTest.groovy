@@ -16,12 +16,13 @@
 package com.perihelios.experimental.intel8085dsl
 
 import com.perihelios.experimental.intel8085dsl.exceptions.OverflowException
+import com.perihelios.experimental.intel8085dsl.util.InvalidValue
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static com.perihelios.experimental.intel8085dsl.Intel8085AssemblerDsl.asm
-import static com.perihelios.experimental.intel8085dsl.TestUtil.combine
+import static com.perihelios.experimental.intel8085dsl.util.TestUtil.combine
 
 class OverflowTest extends Specification {
 	@Shared
@@ -177,15 +178,5 @@ class OverflowTest extends Specification {
 		where:
 			reg16d16inst << reg16d16Pairs*.first
 			invalid << reg16d16Pairs*.second
-	}
-
-	static class InvalidValue {
-		final long value
-		final String message
-
-		InvalidValue(long value, String message) {
-			this.value = value
-			this.message = message
-		}
 	}
 }

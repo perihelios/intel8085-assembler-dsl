@@ -31,7 +31,7 @@ import static com.perihelios.experimental.intel8085dsl.Register.L
 import static com.perihelios.experimental.intel8085dsl.Register.M
 import static com.perihelios.experimental.intel8085dsl.Register.PSW
 import static com.perihelios.experimental.intel8085dsl.Register.SP
-import static com.perihelios.experimental.intel8085dsl.TestUtil.combine
+import static com.perihelios.experimental.intel8085dsl.util.TestUtil.combine
 
 class InvalidRegisterTest extends Specification{
 	@Shared

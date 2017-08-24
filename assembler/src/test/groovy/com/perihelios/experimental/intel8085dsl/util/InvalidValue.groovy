@@ -13,18 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-package com.perihelios.experimental.intel8085dsl
+package com.perihelios.experimental.intel8085dsl.util
 
-class TestUtil {
-	static <L, R> List<Tuple2<L, R>> combine(Iterable<L> left, Iterable<R> right) {
-		List<Tuple2<L, R>> result = []
+class InvalidValue {
+	final long value
+	final String message
 
-		left.each { leftItem ->
-			right.each { rightItem ->
-				result << new Tuple2<L, R>(leftItem, rightItem)
-			}
-		}
-
-		return result
+	InvalidValue(long value, String message) {
+		this.value = value
+		this.message = message
 	}
 }
