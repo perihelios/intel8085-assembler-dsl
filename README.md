@@ -67,14 +67,14 @@ process.
 |`target`|`i8080`, `i8085`|`i8085`|Target processor for which to assemble (use constants from class [ProcessorTarget](assembler/src/main/groovy/com/perihelios/experimental/intel8085dsl/ProcessorTarget.groovy))|
 |`size`|1-65536|None (use `autoSize`)|Size, in bytes, of buffer into which machine code assembled (parameter must not be specified if `autoSize` specified)|
 |`autoSize`|`true`, `false`|`true`|Automatically produce machine code buffer of exact size needed for given instructions (parameter must not be specified if `size` specified)|
-|`autoHlt`|`true`, `false`|`true`|Automatically add HLT instruction at end of machine code buffer|
+|`autoHalt`|`true`, `false`|`true`|Automatically add HLT instruction at end of machine code buffer|
 
 Parameters are passed in an
 [AssemblerParameters](assembler/src/main/groovy/com/perihelios/experimental/intel8085dsl/AssemblerParameters.groovy)
 instance:
 
 ```
-asm(new AssemblerParameters(target: i8080, size: 256, autoHlt: false)) {
+asm(new AssemblerParameters(target: i8080, size: 256, autoHalt: false)) {
     // Assembly language
 }
 ```
