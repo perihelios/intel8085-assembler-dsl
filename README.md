@@ -69,7 +69,7 @@ process.
 |Parameter|Allowed Values|Default|Description|
 |---|---|---|---|
 |`target`|`i8080`, `i8085`|`i8085`|Target processor for which to assemble (use constants from class [ProcessorTarget](assembler/src/main/groovy/com/perihelios/experimental/intel8085dsl/ProcessorTarget.groovy))|
-|`size`|1-65536|None (use `autoSize`)|Size, in bytes, of buffer into which machine code assembled (parameter must not be specified if `autoSize` specified)|
+|`size`|1-65536|Use `autoSize`|Size, in bytes, of buffer into which machine code assembled (parameter must not be specified if `autoSize` specified)|
 |`autoSize`|`true`, `false`|`true`|Automatically produce machine code buffer of exact size needed for given instructions (parameter must not be specified if `size` specified)|
 |`autoHalt`|`true`, `false`|`true`|Automatically add HLT instruction at end of machine code buffer|
 
@@ -87,6 +87,140 @@ asm(new AssemblerParameters(target: i8080, size: 256, autoHalt: false)) {
 The Intel 8085 has 80 instructions, and the 8080 has 78. Both processors have
 the same seven 8-bit registers, plus a set of flags. The 8085 has an additional
 three-bit interrupt mask, accessed through the RIM and SIM instructions.
+
+#### Registers
+
+There are seven registers, each 8 bits in size:
+
+* A
+* B
+* C
+* D
+* E
+* H
+* L
+
+The A register is the *accumulator*, and is special: It is used for nearly all
+arithmetic-logic instructions.
+
+#### Instruction Summary
+
+For more information, see the book *Intel 8080/8085 Assembly Language
+Programming*, available online as a scanned
+[PDF](https://ia801904.us.archive.org/26/items/bitsavers_intel80859mblyLanguageProgrammingManualNov78_5034151/9800301C_8080_8085_Assembly_Language_Programming_Manual_Nov78.pdf),
+or
+[text](https://archive.org/stream/bitsavers_intel80859mblyLanguageProgrammingManualNov78_5034151/9800301C_8080_8085_Assembly_Language_Programming_Manual_Nov78_djvu.txt)
+that has been processed with OCR (contains errors).
+
+|Mnemonic|Operands\*|Description|Notes|
+|---|---|---|---|
+|`ACI`|`D8`|Add immediate with carry to accumulator||
+|`ADC`|`REGM8`|Add register with carry to accumulator||
+|`ADD`|`REGM8`|Add register to accumulator||
+|`ADI`|`D8`|Add immediate to accumulator||
+|`ANA`|`REGM8`|Boolean AND register with accumulator||
+|`ANI`|`D8`|Boolean AND immediate with accumulator||
+|`CALL`|`A16`|Call subroutine||
+|`CC`|`A16`|Call subroutine if carry||
+|`CM`|`A16`|Call subroutine if minus||
+|`CMA`||Complement (Boolean NOT) accumulator||
+|`CMC`||Complement (Boolean NOT) carry flag||
+|`CMP`|`REGM8`|Compare register with accumulator||
+|`CNC`|`A16`|Call subroutine if no carry||
+|`CNZ`|`A16`|Call subroutine if not zero||
+|`CP`|`A16`|Call subroutine if positive||
+|`CPE`|`A16`|Call subroutine if parity even||
+|`CPI`|`D8`|Compare immediate with accumulator||
+|`CPO`|`A16`|Call subroutine if parity odd||
+|`CZ`|`A16`|Call subroutine if zero||
+|`DAA`||Decimal adjust accumulator (for BCD)||
+|`DAD`|`REG16`|Add register pair to HL||
+|`DCR`|`REGM8`|Decrement register||
+|`DCX`|`REG16`|Decrement register pair||
+|`DI`||Disable interrupts||
+|`EI`||Enable interrupts||
+|`HLT`||Halt||
+|`IN`|`P8`|Input from I/O port||
+|`INR`|`REGM8`|Increment register||
+|`INX`|`REG16`|Increment register pair||
+|`JC`|`A16`|Jump if carry||
+|`JM`|`A16`|Jump if minus||
+|`JMP`|`A16`|Jump||
+|`JNC`|`A16`|Jump if no carry||
+|`JNZ`|`A16`|Jump if not zero||
+|`JP`|`A16`|Jump if positive||
+|`JPE`|`A16`|Jump if parity even||
+|`JPO`|`A16`|Jump if parity odd||
+|`JZ`|`A16`|Jump if zero||
+|`LDA`|`A16`|Load accumulator from address||
+|`LDAX`|`REGAX`|Load accumulator from address in register pair||
+|`LHLD`|`A16`|Load HL from address||
+|`LXI`|`REG16`, `D16`|Load immediate to register pair||
+|`MOV`|`REGM8`, `REGM8`|Move (copy) from register to register|Both registers cannot be M|
+|`MVI`|`REGM8`, `D8`|Move (copy) immediate to register||
+|`NOP`||No operation|Used for padding, or timing loops|
+|`ORA`|`REGM8`|Boolean OR register with accumulator||
+|`ORI`|`D8`|Boolean OR immediate with accumulator||
+|`OUT`|`P8`|Output to I/O port||
+|`PCHL`||Copy HL to program counter|Effectively, jump to address in HL|
+|`POP`|`REGP`|Pop stack into register pair||
+|`PUSH`|`REGP`|Push register pair onto stack||
+|`RAL`||Rotate accumulator left through carry||
+|`RAR`||Rotate accumulator right through carry||
+|`RC`||Return from subroutine if carry||
+|`RET`||Return from subroutine||
+|`RIM`||Read interrupt mask into accumulator|Only 8085|
+|`RLC`||Rotate accumulator left||
+|`RM`||Return from subroutine if minus||
+|`RNC`||Return from subroutine if no carry||
+|`RNZ`||Return from subroutine if not zero||
+|`RP`||Return from subroutine if positive||
+|`RPE`||Return from subroutine if parity even||
+|`RPO`||Return from subroutine if parity odd||
+|`RRC`||Rotate accumulator right||
+|`RST`|`D3`|Restart||
+|`RZ`||Return from subroutine if zero||
+|`SBB`|`REGM8`|Subtract register with borrow from accumulator||
+|`SBI`|`D8`|Subtract immediate with borrow from accumulator||
+|`SHLD`|`A16`|Store HL to address||
+|`SIM`||Set interrupt mask from accumulator|Only 8085|
+|`SPHL`||Copy SP to HL||
+|`STA`|`A16`|Store accumulator to address||
+|`STAX`|`REGAX`|Store accumulator to address in register pair||
+|`STC`||Set carry flag||
+|`SUB`|`REGM8`|Subtract register from accumulator||
+|`SUI`|`D8`|Subtract immediate from accumulator||
+|`XCHG`||Exchange HL with DE||
+|`XRA`|`REGM8`|Boolean XOR register with accumulator||
+|`XRI`|`D8`|Boolean XOR immediate with accumulator||
+|`XTHL`||Exchange value on top of stack with HL||
+
+**\*Operand Types:**
+
+|Symbol|Description|
+|---|---|
+|`A16`|Address (16-bit)|
+|`D3`|3-bit immediate value (0-7)|
+|`D8`|8-bit immediate value|
+|`D16`|16-bit immediate value|
+|`REG16`|One of the 16-bit register pairs identified by `B`, `D`, or `H`, or the register `SP`|
+|`REGAX`|One of the 16-bit register pairs identified by `B` or `D`|
+|`REGM8`|One of the 8-bit registers `A`, `B`, `C`, `D`, `E`, `H`, or `L`, or the special pseudoregister `M`, which accesses the 8-bit memory address in the `HL` register pair|
+|`REGP`|One of the 16-bit register pairs identified by `B`, `D`, `H`, or `PSW`|
+|`P8`|8-bit unsigned port number (0-255)|
+
+### Directives
+Directives are not directly assembled to instructions, but are used by the
+assembler for other purposes, such as embedding data in data areas of the
+program.
+
+#### List of Directives
+
+|Symbol|Operands|Description|
+|---|---|---|
+|`DB`|8-bit value|Stores the given value at the current location|
+|`DW`|16-bit value|Stores the given value, with reversed byte order (little-endian), at the current location|
+|`DS`|Size|Reserves a block of memory of the specified size at the current location|
 
 ### Current Location Pointer
 The current location (offset, in bytes, from the beginning of the assembly
