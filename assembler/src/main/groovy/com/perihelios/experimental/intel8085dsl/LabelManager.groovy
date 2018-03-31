@@ -67,7 +67,7 @@ class LabelManager {
 			int labelOffset = label.offset
 
 			for (int i = 0; i < label.byteCount; i++) {
-				machineCode[offset + skip + i] = labelOffset & 0xff
+				machineCode[offset + skip + i] = (byte) (labelOffset & 0xff)
 				labelOffset >>>= 8
 			}
 		}

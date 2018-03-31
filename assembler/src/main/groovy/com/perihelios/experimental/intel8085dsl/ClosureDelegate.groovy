@@ -60,66 +60,66 @@ class ClosureDelegate {
 	AssemblerMethodReturn ACI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11001110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11001110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn ADC(Register reg) {
-		machineCode[index++] = 0b10001000 | reg.reg8
+		machineCode[index++] = (byte) (0b10001000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn ADD(Register reg) {
-		machineCode[index++] = 0b10000000 | reg.reg8
+		machineCode[index++] = (byte) (0b10000000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn ADI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11000110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11000110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn ANA(Register reg) {
-		machineCode[index++] = 0b10100000 | reg.reg8
+		machineCode[index++] = (byte) (0b10100000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn ANI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11100110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11100110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn CALL(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11001101
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11001101
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CC(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11011100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11011100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CM(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11111100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11111100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
@@ -134,69 +134,69 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn CMP(Register reg) {
-		machineCode[index++] = 0b10111000 | reg.reg8
+		machineCode[index++] = (byte) (0b10111000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn CNC(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11010100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11010100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CNZ(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11000100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11000100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CP(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11110100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11110100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CPE(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11101100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11101100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CPI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11111110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11111110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn CPO(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11100100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11100100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn CZ(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11001100
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11001100
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
@@ -206,27 +206,27 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn DAD(Register reg) {
-		machineCode[index++] = 0b00001001 | (reg.reg16 << 4)
+		machineCode[index++] = (byte) (0b00001001 | (reg.reg16 << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn DCR(Register reg) {
-		machineCode[index++] = 0b00000101 | (reg.reg8 << 3)
+		machineCode[index++] = (byte) (0b00000101 | (reg.reg8 << 3))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn DCX(Register reg) {
-		machineCode[index++] = 0b00001011 | (reg.reg16 << 4)
+		machineCode[index++] = (byte) (0b00001011 | (reg.reg16 << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn DI() {
-		machineCode[index++] = 0b11110011
+		machineCode[index++] = (byte) 0b11110011
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn EI() {
-		machineCode[index++] = 0b11111011
+		machineCode[index++] = (byte) 0b11111011
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -238,99 +238,99 @@ class ClosureDelegate {
 	AssemblerMethodReturn IN(long port) {
 		validateP8(port)
 
-		machineCode[index++] = 0b11011011
-		machineCode[index++] = port
+		machineCode[index++] = (byte) 0b11011011
+		machineCode[index++] = (byte) port
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn INR(Register reg) {
-		machineCode[index++] = 0b00000100 | (reg.reg8 << 3)
+		machineCode[index++] = (byte) (0b00000100 | (reg.reg8 << 3))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn INX(Register reg) {
-		machineCode[index++] = 0b00000011 | (reg.reg16 << 4)
+		machineCode[index++] = (byte) (0b00000011 | (reg.reg16 << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn JC(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11011010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11011010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JM(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11111010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11111010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JMP(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11000011
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11000011
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JNC(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11010010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11010010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JNZ(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11000010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11000010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JP(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11110010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11110010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JPE(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11101010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11101010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JPO(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11100010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11100010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn JZ(long address) {
 		validateA16(address)
 
-		machineCode[index++] = 0b11001010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) 0b11001010
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
@@ -338,13 +338,13 @@ class ClosureDelegate {
 		validateA16(address)
 
 		machineCode[index++] = 0b00111010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn LDAX(Register reg) {
-		machineCode[index++] = 0b00001010 | (reg.ax << 4)
+		machineCode[index++] = (byte) (0b00001010 | (reg.ax << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -352,32 +352,32 @@ class ClosureDelegate {
 		validateA16(address)
 
 		machineCode[index++] = 0b00101010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn LXI(Register reg, long value) {
 		validateD16(value)
 
-		machineCode[index++] = 0b00000001 | (reg.reg16 << 4)
-		machineCode[index++] = value & 0xff
-		machineCode[index++] = (value >>> 8) & 0xff
+		machineCode[index++] = (byte) (0b00000001 | (reg.reg16 << 4))
+		machineCode[index++] = (byte) (value & 0xff)
+		machineCode[index++] = (byte) ((value >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn MOV(Register dest, Register src) {
 		if (dest == M && src == M) throw new InvalidRegisterException("Source and destination cannot both be M")
 
-		machineCode[index++] = 0b01000000 | (dest.reg8 << 3) | src.reg8
+		machineCode[index++] = (byte) (0b01000000 | (dest.reg8 << 3) | src.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn MVI(Register reg, long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b00000110 | (reg.reg8 << 3)
-		machineCode[index++] = value & 0xff
+		machineCode[index++] = (byte) (0b00000110 | (reg.reg8 << 3))
+		machineCode[index++] = (byte) (value & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
@@ -387,38 +387,38 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn ORA(Register reg) {
-		machineCode[index++] = 0b10110000 | reg.reg8
+		machineCode[index++] = (byte) (0b10110000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn ORI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11110110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11110110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn OUT(long port) {
 		validateP8(port)
 
-		machineCode[index++] = 0b11010011
-		machineCode[index++] = port
+		machineCode[index++] = (byte) 0b11010011
+		machineCode[index++] = (byte) port
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn PCHL() {
-		machineCode[index++] = 0b11101001
+		machineCode[index++] = (byte) 0b11101001
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn POP(Register reg) {
-		machineCode[index++] = 0b11000001 | (reg.pushPop << 4)
+		machineCode[index++] = (byte) (0b11000001 | (reg.pushPop << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn PUSH(Register reg) {
-		machineCode[index++] = 0b11000101 | (reg.pushPop << 4)
+		machineCode[index++] = (byte) (0b11000101 | (reg.pushPop << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -433,12 +433,12 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn RC() {
-		machineCode[index++] = 0b11011000
+		machineCode[index++] = (byte) 0b11011000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RET() {
-		machineCode[index++] = 0b11001001
+		machineCode[index++] = (byte) 0b11001001
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -457,32 +457,32 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn RM() {
-		machineCode[index++] = 0b11111000
+		machineCode[index++] = (byte) 0b11111000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RNC() {
-		machineCode[index++] = 0b11010000
+		machineCode[index++] = (byte) 0b11010000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RNZ() {
-		machineCode[index++] = 0b11000000
+		machineCode[index++] = (byte) 0b11000000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RP() {
-		machineCode[index++] = 0b11110000
+		machineCode[index++] = (byte) 0b11110000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RPE() {
-		machineCode[index++] = 0b11101000
+		machineCode[index++] = (byte) 0b11101000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RPO() {
-		machineCode[index++] = 0b11100000
+		machineCode[index++] = (byte) 0b11100000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -494,25 +494,25 @@ class ClosureDelegate {
 	AssemblerMethodReturn RST(long addressCode) {
 		validateD3(addressCode)
 
-		machineCode[index++] = 0b11000111 | (addressCode << 3)
+		machineCode[index++] = (byte) (0b11000111 | (addressCode << 3))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn RZ() {
-		machineCode[index++] = 0b11001000
+		machineCode[index++] = (byte) 0b11001000
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn SBB(Register reg) {
-		machineCode[index++] = 0b10011000 | reg.reg8
+		machineCode[index++] = (byte) (0b10011000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn SBI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11011110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11011110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
@@ -520,8 +520,8 @@ class ClosureDelegate {
 		validateA16(address)
 
 		machineCode[index++] = 0b00100010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
@@ -535,7 +535,7 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn SPHL() {
-		machineCode[index++] = 0b11111001
+		machineCode[index++] = (byte) 0b11111001
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -543,13 +543,13 @@ class ClosureDelegate {
 		validateA16(address)
 
 		machineCode[index++] = 0b00110010
-		machineCode[index++] = address & 0xff
-		machineCode[index++] = (address >>> 8) & 0xff
+		machineCode[index++] = (byte) (address & 0xff)
+		machineCode[index++] = (byte) ((address >>> 8) & 0xff)
 		new AssemblerMethodReturn(bytesUsed: 3)
 	}
 
 	AssemblerMethodReturn STAX(Register reg) {
-		machineCode[index++] = 0b00000010 | (reg.ax << 4)
+		machineCode[index++] = (byte) (0b00000010 | (reg.ax << 4))
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -559,38 +559,38 @@ class ClosureDelegate {
 	}
 
 	AssemblerMethodReturn SUB(Register reg) {
-		machineCode[index++] = 0b10010000 | reg.reg8
+		machineCode[index++] = (byte) (0b10010000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn SUI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11010110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11010110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn XCHG() {
-		machineCode[index++] = 0b11101011
+		machineCode[index++] = (byte) 0b11101011
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn XRA(Register reg) {
-		machineCode[index++] = 0b10101000 | reg.reg8
+		machineCode[index++] = (byte) (0b10101000 | reg.reg8)
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
 	AssemblerMethodReturn XRI(long value) {
 		validateD8(value)
 
-		machineCode[index++] = 0b11101110
-		machineCode[index++] = value
+		machineCode[index++] = (byte) 0b11101110
+		machineCode[index++] = (byte) value
 		new AssemblerMethodReturn(bytesUsed: 2)
 	}
 
 	AssemblerMethodReturn XTHL() {
-		machineCode[index++] = 0b11100011
+		machineCode[index++] = (byte) 0b11100011
 		new AssemblerMethodReturn(bytesUsed: 1)
 	}
 
@@ -616,15 +616,15 @@ class ClosureDelegate {
 
 	AssemblerMethodReturn DB(long value) {
 		validateD8(value)
-		machineCode[index++] = value & 0xff
+		machineCode[index++] = (byte) (value & 0xff)
 
 		new AssemblerMethodReturn(bytesUsed: 1, skip: 0)
 	}
 
 	AssemblerMethodReturn DW(long value) {
 		validateD16(value)
-		machineCode[index++] = value & 0xff
-		machineCode[index++] = (value >>> 8) & 0xff
+		machineCode[index++] = (byte) (value & 0xff)
+		machineCode[index++] = (byte) ((value >>> 8) & 0xff)
 
 		new AssemblerMethodReturn(bytesUsed: 2, skip: 0)
 	}
