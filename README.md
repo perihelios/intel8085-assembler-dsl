@@ -303,6 +303,103 @@ start
 ```
 
 ### Macros
+Macros are subroutines called as part of the assembly process. They allow you to
+write a sequence of instructions once, then insert those instructions at other
+places in the program.
+
+Macros are named, and are invoked when needed by using that name, just as if
+they were instructions.
+
+Let's start with a very simple example. We define a macro named `DBL` that will
+double the value in register `A`, and then we invoke the macro twice in a simple
+program:
+
+```
+macro("DBL") {
+    ADD(A)
+}
+
+MVI(A, 7)
+DBL
+SUI(1)
+DBL
+```
+
+This is assembled identically to:
+
+```
+MVI(A, 7)
+ADD(A)
+SUI(1)
+ADD(A)
+```
+
+To make macros more flexible, you can define parameters that are used in the
+instructions inside the macro. Here is an example macro, `ADDTOI`, that adds an
+immediate value to any given register, not just `A`; flags will be set
+appropriately from the addition:
+
+```
+macro("ADDTOI") { reg, value ->
+    if (reg == A) {
+        ADI(value)
+    } else {
+        def tempReg = (reg == B || reg == C) ? D : B
+
+        PUSH(tempReg)    // Save values currently in registers needed for temp work
+        MOV(tempReg, A)  // Save A
+        MOV(A, reg)      // Put target register value in accumulator
+        ADI(value)       // Add value
+        MOV(reg, A)      // Store the value in the original register
+        MOV(A, tempReg)  // Restore A
+        POP(tempReg)     // Restore values to registers that were needed for temp work
+    }
+}
+
+MVI(B, 17)
+ADDTOI(B, 72)
+```
+
+If called with `A` as the register, `ADDTOI` just assembles a single `ADI`
+instruction. If another register is passed, the macro outputs instructions that
+wrangle registers and the stack to make it possible to do the addition in the
+`A` register, as required by the CPU architecture, while still producing the end
+result of adding to the specified register. No other registers are overwritten,
+and the flags are preserved from the addition operation.
+
+#### Labels in Macros
+Labels in macros are always local. You cannot refer to a label outside the macro
+body (for instance, a label in another macro or in the main program). Because of
+this, there's no conflict in reusing names:
+
+```
+macro("DO_IT") {
+    loop
+        ...
+        JNC(loop)
+}
+
+loop
+    DO_IT
+    JZ(loop)
+```
+
+There is no confusion of the two `loop` labels; the assembler uses the correct
+address for the label in both the `JNC` and `JZ` instructions.
+
+#### Macro Tips
+Macros are extremely powerful. Here are some tips for using them.
+
+1. At the top of the macro, carefully document what it does, including any
+   registers or memory it modifies.
+1. It's very easy to create a tangled, spaghetti-like mess in assembly language.
+   Macros can help with that... or make it worse. Use them wisely to make your
+   code easier to follow.
+1. Unlike assembly-language subroutines, macros take up space everywhere they're
+   invoked. They're like a powerful version of copy-and-paste of a bunch of
+   instructions. It may be more appropriate to use a subroutine for a large
+   series of instructions, instead of plopping a macro invocation in dozens of
+   places throughout your code, especially if memory is tight.
 
 ## License
 Apache 2.0 (see [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for
